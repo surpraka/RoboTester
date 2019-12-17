@@ -1,0 +1,1 @@
+open 'www.seven.org'

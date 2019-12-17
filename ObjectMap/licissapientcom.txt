@@ -1,0 +1,6 @@
+,key,value
+0,menu,//*[text()='menu']
+1,Careers,//button[@class='Careers']
+2,Select a Discipline,//*[text()='Business Development']/..
+3,Select a Location,"//*[text()='India, Gurgaon']/.."
+4,Search Jobs,//button[@class='Search Jobs']

@@ -1,0 +1,7 @@
+,key,value
+0,Register,"//*[contains(@value,'Register')]"
+1,User Name,"//*[contains(text(),'User Name')]//..//input"
+2,User Password,//input[@id = 'dialogTemplate-dialogForm-password']
+3,re-enter Password,//input[@id = 'dialogTemplate-dialogForm-passwordConfirm']
+4,email Address,//input[@id = 'dialogTemplate-dialogForm-email']
+5,re-enter Email Address,//input[@id = 'dialogTemplate-dialogForm-emailConfirm']

@@ -1,0 +1,1 @@
+open 'www.amazon.com'

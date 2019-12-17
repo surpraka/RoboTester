@@ -1,0 +1,23 @@
+,key,value
+0,Select a Discipline,//*[text()='Business Development']/..
+1,Select a Location,"//*[text()='India, Gurgaon']/.."
+2,Select a region,//*[text()='India']/..
+3,All Locations,//*[text()='India - Haryana - Gurgaon']/..
+4,Select a type of job,//*[text()='Internship']/..
+5,Select a discipline,//*[text()='Program Management']/..
+6,Hula,//button[@class='Register']
+7,INVESTMENT PROFESSIONAL,//button[@class='INVESTMENT PROFESSIONAL']
+8,UNITED STATES,//button[@class='UNITED STATES']
+9,Financial Advisor,//*[text()='Financial Advisor']
+10,agreed,//button[@class='I AGREE']
+11,password,//input[@id = 'password']
+12,userName,//input[@id = 'userName']
+13,Complete,"//*[contains(@value,'Complete')]"
+14,Register,//button[@class='Register']
+15,I Agree,//*[text()='I Agree']
+16,menu,//*[text()='menu']
+17,Careers,//button[@class='Careers']
+18,Search Jobs,//button[@class='Search Jobs']
+19,Keywords,"//*[contains(text(),'Keywords')]//..//input"
+20,Hupla,//*[text()='Program Management']/..
+21,Search,//button[text()='Search']

@@ -1,0 +1,1 @@
+Select the value in the dropbox using “select by index”

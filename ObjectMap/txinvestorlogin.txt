@@ -1,0 +1,6 @@
+,key,value
+0,Continue,//*[text()='Continue']
+1,ibd,"//input[contains(@name,'ibd')]"
+2,userId,"//input[contains(@name,'userId')]"
+3,password,"//input[contains(@name,'password')]"
+4,Financial Org,"//input[contains(@name,'ibd')]"

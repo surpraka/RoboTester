@@ -1,0 +1,1 @@
+post 'http://api.mathjs.org/v4/' with param '{"expr" :"1.2+3.4"}' and verify response is '4.6'

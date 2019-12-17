@@ -1,0 +1,7 @@
+,key,value
+0,Keywords,"//*[contains(text(),'Keywords')]//..//input"
+1,Select a region,//*[text()='India']/..
+2,All Locations,//*[text()='India - Haryana - Gurgaon']/..
+3,Select a type of job,//*[text()='Internship']/..
+4,Select a discipline,//*[text()='Program Management']/..
+5,Search,//button[text()='Search']

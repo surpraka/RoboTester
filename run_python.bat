@@ -1,0 +1,2 @@
+python suite.py
+pause

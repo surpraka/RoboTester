@@ -1,0 +1,23 @@
+User enters 'Hey how are you' in global search box
+User enters 'xyz' in global search box
+User enters 'India' in global search box
+User enters 'About us' in global search box
+User enters 'help desk' in search box
+User enters 'MFS' in the search box
+User enters 'role' in the search box
+Enter the username 'Riddler@mfs.com'
+User Enter the username 'sun@mfs.com'
+Enter the username 'wow@mfs.com' in username column
+User Enter 'hello@mfs.com' as username
+User Enter the username 'abc@mfs.com' in Login column
+Enter the username 'xyz@mfs.com'
+User enters the password 'moon123'
+User enter the password 'moon123'
+User enter the password 'test123' in the password column.
+enter the password 'testing123'
+User enter 'tester123' as password
+enter the password 'pokemon123'
+enter 'hunter123' as password
+enter the password 'hunt123' in the password column.
+User enters 'hunter123' as password
+User enter 'hunter123' as password
