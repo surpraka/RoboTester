@@ -1,1 +1,0 @@
-User enter the password 'test123' in the password column.

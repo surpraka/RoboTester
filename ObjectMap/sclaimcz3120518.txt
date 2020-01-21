@@ -1,4 +1,0 @@
-,key,value
-0,customerId.value,//input[@id = 'customerId.value']
-1,customerPassword.value,//input[@id = 'customerPassword.value']
-2,Continue,"//*[contains(@value,'Continue')]"

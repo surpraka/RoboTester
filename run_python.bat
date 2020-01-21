@@ -1,2 +1,2 @@
-python suite.py
+python RegressionSuite.py
 pause

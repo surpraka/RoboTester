@@ -1,0 +1,11 @@
+validate that ABC is enabled
+validate that user wait for '3' seconds
+validate that user wait for '3' seconds
+validate that user wait for '3' seconds
+validate that user wait for '3' seconds
+validate that user wait for '3' seconds
+validate that user wait for '3' seconds
+validate that user wait for '3' seconds
+validate that user wait for '3' seconds
+validate that user wait for '3' seconds
+validate that user wait for '3' seconds

@@ -1,1 +1,0 @@
-user selects the drop down menu and 20 options are displayed

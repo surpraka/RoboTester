@@ -1,3 +1,0 @@
-python allinone.py
-
-pause

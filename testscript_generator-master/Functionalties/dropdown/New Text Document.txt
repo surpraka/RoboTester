@@ -1,1 +1,0 @@
-client selects the 'Investment' option from 'Select a Fund' dropdown list

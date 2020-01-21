@@ -1,2 +1,0 @@
-,key,value
-0,Search Career Opportunities,//*[text()='Search Career Opportunities']

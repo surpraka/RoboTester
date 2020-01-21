@@ -1,0 +1,4 @@
+;key;value
+0;INVESTMENT PROFESSIONAL;//button[text()='INVESTMENT PROFESSIONAL']
+1;UNITED STATES;//button[text()='UNITED STATES']
+2;Shareholder;//*[text()='Shareholder']

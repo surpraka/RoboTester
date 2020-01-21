@@ -1,0 +1,10 @@
+User Enter the password 'test123' in the password column.
+enter the 'Hair' in 'Search Field'
+Enter 'Hair' in 'Search Field'
+user enter the text as 'Hair' in 'Search Field'
+enter 'Hair' in 'Search Field'
+user Enter 'Hair' in 'Search Field'
+user enter 'Hair' in 'Search Field'
+user enter the text as 'abc' in 'Search Field'
+user enter the text as 'xyz' in 'Search Field'
+

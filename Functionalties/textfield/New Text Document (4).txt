@@ -1,1 +1,0 @@
-Select the 'value' in the dropdown using “select by index”

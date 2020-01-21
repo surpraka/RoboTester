@@ -1,0 +1,9 @@
+Assert that suraj is visible
+Assert that user hover over 'cart' icon
+Assert that user hover over 'cart' icon
+Assert that user hover over 'cart' icon
+Assert that user hover over 'cart' icon
+Assert that user hover over 'cart' icon
+Assert that user hover over 'cart' icon
+Assert that user hover over 'cart' icon
+Assert that user hover over 'cart' icon

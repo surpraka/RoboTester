@@ -1,3 +1,0 @@
-,key,value
-0,Careers,//button[@class='Careers']
-1,Our Firms,//button[@class='Our Firms']

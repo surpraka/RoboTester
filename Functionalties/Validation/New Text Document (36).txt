@@ -1,0 +1,7 @@
+check xyz12 Header is not displayed
+validate that user wait for '3' seconds
+validate that user wait for '3' seconds
+validate that user wait for '3' seconds
+validate that user wait for '3' seconds
+validate that user wait for '3' seconds
+

@@ -1,2 +1,0 @@
-,key,value
-0,Register,//button[@class='Register']

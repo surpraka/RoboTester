@@ -1,0 +1,6 @@
+enter the password 'pokemon123'
+user Enter the text as 234 in the Field
+user Enter the text as abc234 in text Field
+User Enter the text as safdsf in the 'Search Field'
+User enter the text as full in the 'Search Field'
+User enter the text as 'Hair' in the 'Search Field'

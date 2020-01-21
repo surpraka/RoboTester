@@ -1,6 +1,0 @@
-,key,value
-0,Shareholder,//*[text()='Shareholder']
-1,INVESTMENT PROFESSIONAL,//button[@class='INVESTMENT PROFESSIONAL']
-2,if you are reading this ,get a life
-3,Financial Advisor,//*[text()='Financial Advisor']
-4,UNITED STATES,//button[@class='UNITED STATES']
