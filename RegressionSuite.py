@@ -11,12 +11,9 @@ from pathlib import Path
 
 home = str(Path.home())
 
-MasterSheet = r''+home+'\\Desktop\\SecondCopy\\Regression.xlsx'
-TestCasesloc = r''+home+'\\Desktop\\SecondCopy\\DoveTestCases.xlsx'
+df = pd.read_excel(r"TestCases.xlsx", sheet_name= "Driver")
 
-df = pd.read_excel(r"DoveTestCases.xlsx", sheet_name= "Driver")
-
-wb = xlrd.open_workbook(TestCasesloc) 
+wb = xlrd.open_workbook(r"TestCases.xlsx") 
 sheet = wb.sheet_by_name("Driver")
 headers = sheet.row_values(0)
 wb.release_resources()
@@ -32,16 +29,16 @@ for header in headers:
         df = []
         for i in range(0,len(regressionFlags)):
             if(regressionFlags[i] == ('Y')):
-                data = pd.read_excel(TestCasesloc, sheet_name = scenarios[i])
+                data = pd.read_excel(r"TestCases.xlsx", sheet_name = scenarios[i])
                 df.append(data)
 
         df = pd.concat(df)
         print(df)
 
-        writer = pd.ExcelWriter(MasterSheet, engine='xlsxwriter')
+        writer = pd.ExcelWriter(r"Regression.xlsx", engine='xlsxwriter')
         df.to_excel(writer, sheet_name= "RunTest")
         writer.save()   
-        os.system('python C:\\Users\\surpraka\Desktop\\SecondCopy\\allinone.py')
+        os.system('python allinone.py')
         writer.close()
     if('RegressionExecutionFlag[Y]' in header):
         print('Starting Individual Execution')
@@ -56,11 +53,11 @@ for header in headers:
         print("Total Number Of Test Cases :"+str(testCases))
         for i in range(0,len(regressionFlags)):
             if(regressionFlags[i] == ('Y')):
-                data = pd.read_excel(TestCasesloc, sheet_name = scenarios[i])
-                writer = pd.ExcelWriter(MasterSheet, engine='xlsxwriter')
+                data = pd.read_excel(r"TestCases.xlsx", sheet_name = scenarios[i])
+                writer = pd.ExcelWriter(r"Regression.xlsx", engine='xlsxwriter')
                 data.to_excel(writer, sheet_name= "RunTest")
                 writer.save()   
-                os.system('python C:\\Users\\surpraka\\Desktop\\SecondCopy\\allinone.py')
+                os.system('python allinone.py')
                 writer.close()
 
         
