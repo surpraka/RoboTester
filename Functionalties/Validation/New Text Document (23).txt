@@ -1,8 +1,1 @@
 validate xyz is displayed
-Assert that user hover over 'cart' icon
-Assert that user hover over 'cart' icon
-Assert that user hover over 'cart' icon
-Assert that user hover over 'cart' icon
-Assert that user hover over 'cart' icon
-Assert that user hover over 'cart' icon
-Assert that user hover over 'cart' icon

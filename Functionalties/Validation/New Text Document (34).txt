@@ -1,16 +1,2 @@
 Check that xyz field is disabled
-verify that user hover over 'cart' icon
-verify that user hover over 'cart' icon
-verify that user hover over 'cart' icon
-verify that user hover over 'cart' icon
-verify that user hover over 'cart' icon
-verify that user hover over 'cart' icon
-verify that user hover over 'cart' icon
-verify that user hover over 'cart' icon
-verify that user hover over 'cart' icon
-verify that user hover over 'cart' icon
-verify that user hover over 'cart' icon
-verify that user hover over 'cart' icon
-verify that user hover over 'cart' icon
-verify that user hover over 'cart' icon
 

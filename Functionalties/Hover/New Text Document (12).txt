@@ -1,0 +1,32 @@
+user hovers on 'Add to bag' icon
+user hovers on 'Add to bag' element
+user hovers to 123 button at top left 
+user hovers to 234wedas on the page
+
+user hover the mouse click to abc element
+user hover the mouse click to 12323f element
+user hover the mouse click to abc element
+user hover the mouse click to abc element
+user hovers the mouse click to abc element
+user hovers the mouse click to abc123 icon
+user hovers the mouse click to abc321 icon
+user hovers the mouse click to a12 icon
+user hovers the mouse click to 389ydehushd element
+user hovers the mouse click to abc element
+
+user hover over the abc element
+user hovers over xyz element
+User hovers over xyz icon on the bottom of page
+User hovers over xyz icon on the bottom of page
+User hovers over xyz icon on the bottom of page
+User hover over the 12 icon on the page
+User hover over the abc element over the page
+User hover over the abc element
+User hover over abc34 element
+User hover over abc element
+User hover over ab23 element
+User hover over 123 element
+User hover over abc element
+
+
+

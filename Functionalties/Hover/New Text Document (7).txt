@@ -1,0 +1,29 @@
+perform hover action on 'Add to bag' icon
+perform hover action on 'Add to bag' element
+perform hover action to 123 button at top left 
+hover to 234wedas on the page
+
+hover the mouse click to abc element
+hover the mouse click to 12323f element
+user performs hover the mouse click to abc element
+user performs hover the mouse click to abc element
+user hovers the mouse click to abc element
+user hovers the mouse click to abc123 icon
+user hovers the mouse click to abc321 icon
+user hovers the mouse click to a12 icon
+user perform hover the mouse click to 389ydehushd element
+user perform hover the mouse click to abc element
+
+user moves mouse pointer to abc element
+user performs hover over xyz element
+User performs hover action over the xyz icon on the bottom of page
+User performs hover over xyz icon on the bottom of page
+User moves mouse pointer over xyz icon on the bottom of page
+User moves mouse pointer over the 12 icon on the page
+User perform hover over the abc element over the page
+User perform hover over the abc element
+User perform hover over abc34 element
+User perform hover over abc element
+User perform hover over ab23 element
+User perform mouse hover to 123 element
+User perform mouse hover to element

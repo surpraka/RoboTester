@@ -1,2 +1,3 @@
 ;key;value
 0;Register;//*[text()='Register']
+1;MFS Logo;//div[@class='mfs-home-logo']//a[@class='js-mfs-logo']

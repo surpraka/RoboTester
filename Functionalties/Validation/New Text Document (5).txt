@@ -1,12 +1,1 @@
 verify that url is 1121
-validate that user wait for '3' seconds
-validate that user wait for '3' seconds
-validate that user wait for '3' seconds
-validate that user wait for '3' seconds
-validate that user wait for '3' seconds
-validate that user wait for '3' seconds
-validate that user wait for '3' seconds
-validate that user wait for '3' seconds
-validate that user wait for '3' seconds
-validate that user wait for '3' seconds
-validate that user wait for '3' seconds

@@ -1,3 +1,4 @@
+
 import pickle
 import pandas as pd
 import csv
@@ -18,6 +19,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
 import requests
 import json
 import os.path
@@ -425,6 +427,164 @@ class Button:
 
         return flag and validFlag
 
+class Hover:
+    
+    def action(self,sentence,driver):
+        
+        driver.implicitly_wait(1)        
+        array = sentence.split("'")
+        flag = 0 ;
+# =============================================================================
+# try to find the element using different strategies
+# and status flag keeps track of whether the element has been found
+# =============================================================================
+        try :
+            if(flag == 0):
+                flag = 1
+                temp = "//input[contains(@text,'"+array[1]+"')]"
+                elem = driver.find_element_by_xpath(temp)
+                print('this is by contains @text')
+        except NoSuchElementException :
+            flag =0
+            pass
+
+        try :
+            if(flag == 0):
+                flag = 1
+                temp = "//input[@title = '"+array[1]+"']"
+                elem = driver.find_element_by_xpath(temp)
+                print('this is by //input_title')
+        except NoSuchElementException :
+            flag =0
+            pass
+
+        try :
+            if(flag == 0):
+                flag = 1
+                temp = "//input[@id = '"+array[1]+"']"
+                elem = driver.find_element_by_xpath(temp)
+                print('this is by //input_@id')
+        except NoSuchElementException :
+            flag =0
+            pass
+
+        try :
+            if(flag == 0):
+                flag = 1
+                temp = "//input[contains(@name,'"+array[1]+"')]"
+                elem = driver.find_element_by_xpath(temp)
+                print('this is by contains @name')
+        except NoSuchElementException :
+            flag =0
+            pass
+
+        try :
+            if(flag == 0):
+                flag = 1
+                temp = "//input[contains(@name,'"+array[1]+"')]"
+                elem = driver.find_element_by_link_text(array[3])
+                print('this is by link text')
+        except NoSuchElementException :
+            flag =0
+            pass
+        
+        try :
+            if(flag == 0):
+                flag = 1
+                temp = "//input[contains(@text,'"+array[1]+"')]"
+                elem = driver.find_element_by_xpath(temp)
+                print('this is by contains @text')
+        except NoSuchElementException :
+            flag =0
+            pass
+        
+        try:
+            if(flag==0):
+               temp = "//*[contains(@value,'"+array[1]+"')]"
+               elem = driver.find_element_by_xpath(temp)
+               flag=1
+               print(temp)
+               print('this is contains @value')
+        except NoSuchElementException:
+            flag=0
+            pass
+        
+        try :
+            if(flag == 0):
+                flag = 1
+                temp = "//*[contains(text(),'"+array[1]+"')]//..//input"
+                elem = driver.find_element_by_xpath(temp)
+                print('this is by contains placeholder')
+        except NoSuchElementException :
+            flag =0
+            pass
+
+
+        validFlag = 0
+
+        dic = {}
+        #name = driver.current_url
+        driver.implicitly_wait(1)
+        name = driver.title
+        name = re.sub(r'\W','',str(name))
+        #name = name[-15:]
+        filepath = "ObjectMap/"+name+".txt"
+
+        if(os.path.exists(filepath)):
+            print("file exists")
+            pass
+        else:
+            print("making file")
+            f= open(filepath,"w+")
+            f.close()
+            
+# =============================================================================
+# read the elements and xpaths for current page from object map to dictionary
+# =============================================================================
+        with open(filepath ) as csv_file :
+
+            csv_reader = csv.reader(csv_file,delimiter=';')
+            line_count=0
+            for row in csv_reader:
+                if line_count==0:
+                    line_count+=1
+                else:
+                    dic[row[1]] = row[2]
+
+#if element not found yet then check in dictionary
+        if(flag==0):
+            print('searching in dictionary')
+            if array[1] in dic.keys():
+               try:
+                    temp = dic[array[1]]
+                    flag=1
+                    elem = driver.find_element_by_xpath(temp)
+                    print('element found in dictionary')
+               except NoSuchElementException:
+                    flag=0
+                    pass
+#perform action
+        if(flag == 1):
+            hover = ActionChains(driver).move_to_element(elem)
+            hover.perform() 
+
+            try:
+                if(elem.is_displayed()):
+                    print("pass")
+                    validFlag = 1
+            except:
+                print("fail")
+        else:
+            print('element not found')
+#if element found and not in dictionary then update dictionary
+        if(flag==1):
+            if not array[1] in dic.keys():
+                dic[array[1]] = temp
+# write dictionary to csv file of object map for current page
+        df = pd.DataFrame( [(k,v) for k,v in dic.items()],columns = ['key','value'])
+        df.to_csv(filepath,sep = ';')
+        return flag and validFlag
+        
 class Textfield:
 
     def action(self,sentence,driver):
@@ -593,14 +753,15 @@ f = open(browserFilePath,"r");
 
 for x in f:
     if('Y' in x or 'y' in x or 'Yes' in x or 'YES' in x):
-        print(x)
         browserType = x.split(":")[0].strip()
         break
 
 print("Intializing "+browserType+" .......")    
 
 if(browserType == "Chrome"):
-    driver = webdriver.Chrome(executable_path='DriverConfig\chromedriver.exe')
+    options = Options()
+    options.binary_location = "C:/Users/surpraka/AppData/Local/Google/Chrome/Application/chrome.exe"
+    driver = webdriver.Chrome(chrome_options=options, executable_path="DriverConfig\chromedriver.exe", )
 elif(browserType == "Firefox"):
     driver = webdriver.Firefox(executable_path='DriverConfig\geckodriver.exe')
 elif(browserType == "IE" or browserType == "Interent Explorer"):
@@ -635,7 +796,7 @@ for sen in sample:
             break
 
 
-    if(classifier.predict(testcase) ==5):
+    if(classifier.predict(testcase) ==6):
         print("dropdown")
         dropdown = Dropdown()
         # pass the action to dropdown class 
@@ -658,7 +819,7 @@ for sen in sample:
             gateway.entry_point.reportFail('testcase :'+sen+' is fail')
             break
 
-    if(classifier.predict(testcase) ==6):
+    if(classifier.predict(testcase) ==7):
 
         print("textfield")
         textfield = Textfield()
@@ -670,7 +831,7 @@ for sen in sample:
             gateway.entry_point.reportFail('testcase :'+sen+' is fail')
             break
 
-    if(classifier.predict(testcase) == 3):
+    if(classifier.predict(testcase) == 4):
         gateway.entry_point.reportPass('***** Running WebService Test*****')
         print('getservice')
         array = sen.split("'")
@@ -703,7 +864,7 @@ for sen in sample:
             gateway.entry_point.reportFail('status code is : '+r.status_code)
 
 
-    if(classifier.predict(testcase) == 2):
+    if(classifier.predict(testcase) == 3):
         gateway.entry_point.reportPass('***** Running WebService Test*****')
         print('post service')
         array = sen.split("'")
@@ -728,18 +889,22 @@ for sen in sample:
             gateway.entry_point.reportPass('service verified')
         else:
             gateway.entry_point.reportFail('response not matching')
-
-    if(classifier.predict(testcase) == 4):
+            
+    if(classifier.predict(testcase) == 2):
+        print("Hover")
+        hover = Hover()
+         # pass the action to textfield class 
+        status_flag = hover.action(str(sen),driver)
+        if(status_flag == 1 ):
+            gateway.entry_point.reportPass('testcase :'+sen+' is successful')
+        else:
+            gateway.entry_point.reportFail('testcase :'+sen+' is fail')
+            break
+        
+    if(classifier.predict(testcase) == 5):
         print('validation')
         array = sen.split("'")
         
-        if('Hover' in sen or 'hover' in sen):
-            Element = findElement.FindElement()
-            elem = Element.action(str(sen),driver)
-            hover = ActionChains(driver).move_to_element(elem)
-            hover.perform()        
-        if('wait for' in sen):
-            driver.implicitly_wait(5)
         if('equal to' in sen):
             Element = findElement.FindElement()
             elem = Element.action(str(sen),driver)
