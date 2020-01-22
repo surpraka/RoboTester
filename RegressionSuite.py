@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Dec 17 16:20:14 2019
-
 @author: surpraka
 """
 import os
@@ -59,6 +58,3 @@ for header in headers:
                 writer.save()   
                 os.system('python allinone.py')
                 writer.close()
-
-        
-    
