@@ -24,7 +24,7 @@ pipeline {
 	stage('Start Regression'){
 		steps{
 			bat 'call run_python.bat'
-			bat pause
+			bat 'pause'
 	  }
 	}
   }
