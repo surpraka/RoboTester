@@ -1,0 +1,28 @@
+pipeline {
+  agent {
+    node {
+      label 'RoboTester'
+      customWorkspace 'C:\Users\surpraka\Desktop\RoboTester'
+    }
+  }
+  stages {
+	stage('Start Java Gateway'){
+	  steps{
+		start cmd /k java -jar ExtentReportjar.jar
+	  }
+	}
+    
+	stage('Install Required Lib') {
+      steps {
+		call imports.bat
+      }
+    }
+	
+	stage('Start Regression'){
+	  steps{
+		call run_python.bat
+		pause
+	  }
+	}
+  }
+}
