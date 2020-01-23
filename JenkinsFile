@@ -5,7 +5,7 @@ pipeline {
 	
 	stage('Checkout'){
 	  steps{
-		git branch: 'develop' , credentialsId: 'BitBucket RoboTester' , url : 'https://del.tools.publicis.sapient.com/bitbucket/scm/dam/robotester.git'
+		git branch: 'master' , credentialsId: 'BitBucket RoboTester' , url : 'https://del.tools.publicis.sapient.com/bitbucket/scm/dam/robotester.git'
 	  }
 	}
 	
