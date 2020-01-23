@@ -58,3 +58,5 @@ for header in headers:
                 writer.save()   
                 os.system('python allinone.py')
                 writer.close()
+
+print("Program has ended")
