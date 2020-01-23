@@ -1,11 +1,14 @@
 pipeline {
-  agent {
-    node {
-      label 'RoboTester'
-      customWorkspace 'C:\Users\surpraka\Desktop\RoboTester'
-    }
-  }
+  agent any
+  
   stages {
+	
+	stage('Checkout'){
+	  steps{
+		git branch: 'develop' , credentialsId: 'BitBucket RoboTester' , url : 'https://del.tools.publicis.sapient.com/bitbucket/scm/dam/robotester.git'
+	  }
+	}
+	
 	stage('Start Java Gateway'){
 	  steps{
 		start cmd /k java -jar ExtentReportjar.jar

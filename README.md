@@ -2,13 +2,13 @@ README v1.0 / January 2020
 
 # Utility : RoboTester
 
-##Introduction
+##Introduction : 
 RoboTester is a sapient proprietary tool, which helps to automate web pages directly from manual test cases
 using the concept of Machine Learing(ML) and Natural Language Processing(NLP) via Python. It has the
 capability to use existing Java Frameworks, along with the support of crossbrowser testing. It extends
 the support to execute testcases over jenkins also.
 
-##Usage
+##Usage : 
 Roboster wants user to prepare some test data before execution i.e.,
 	
 	1. Write Manual TestCases :
@@ -32,22 +32,22 @@ Finally, run the 'execute' bat(in the project repository) file to initiate the R
 
 ##Installation
 
-###Requirements
+###Requirements : 
 Install java version 8
 Install the latest version of Python as per the OS
 Install the required python libraries - using 'Imports' batch file present inside RoboTester code repository
 Install Spyder (Via Anaconda) to debug python code
 
-###SetUp
+###SetUp : 
 Clone project from github repository : https://del.tools.publicis.sapient.com/bitbucket/projects/DAM/repos/robotester/
 Make user to have all the above requirements
 
-##Credits and Contacts
+##Credits and Contacts : 
 Varun Sharma (varun.sharma@publicissapient.com)
 Ashok Yadav  (ashok.yadav@publicissapient.com)
 Suraj Prakash (suraj.prakash@publicissapient.com)
 
-#License
+#License : 
 This project is licensed under Publicis Sapient. It should not be shared with the third party without informing
 an oragnization. Also, any kind of modification must be conveyed before launching the after versions.
 
