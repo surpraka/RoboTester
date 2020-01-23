@@ -10,21 +10,21 @@ pipeline {
 	}
 	
 	stage('Start Java Gateway'){
-	  steps{
-		start cmd /k java -jar ExtentReportjar.jar
-	  }
+		steps{
+			start cmd /k java -jar ExtentReportjar.jar
+		}
 	}
     
 	stage('Install Required Lib') {
-      steps {
-		call imports.bat
-      }
+		steps {
+			call imports.bat
+		}
     }
 	
 	stage('Start Regression'){
-	  steps{
-		call run_python.bat
-		pause
+		steps{
+			call run_python.bat
+			pause
 	  }
 	}
   }
