@@ -1,9 +1,13 @@
-# -*- coding: utf-8 -*-
 """
-Created on Thu Dec 19 13:03:42 2019
+/**********************************************************************
+* RoboTester Version 1.0
+* PUBLICIS SAPIENT PROPRIETARY/CONFIDENTIAL
+* Use is subject to Organization terms
+* @author Varun Sharma,Ashok Yadav & Suraj Prakash
+* @since version 1.0
+************************************************************************/
+"""
 
-@author: surpraka
-"""
 import csv
 import re
 from selenium.common.exceptions import NoSuchElementException

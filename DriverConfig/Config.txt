@@ -1,0 +1,2 @@
+Operating System : Windows # User can select either Mac, Linux Or Windows
+Browser : Chrome # User can select either Chrome, Firefox and IE

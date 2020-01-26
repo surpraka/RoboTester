@@ -1,3 +1,0 @@
-Chrome : Y
-Firefox : N
-IE : N
