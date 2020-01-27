@@ -17,7 +17,7 @@ def setUpDriver():
     global driver
     
     # Reading Environment Configuration
-    browserFilePath = "DriverConfig/Config.txt"
+    browserFilePath = "Environment/Config.txt"
     f = open(browserFilePath,"r");
     for x in f:
         if('Operating System' in x):
@@ -30,28 +30,28 @@ def setUpDriver():
         if(browserType == "Chrome"):
             options = Options()
             options.binary_location = "C:/Users/surpraka/AppData/Local/Google/Chrome/Application/chrome.exe"
-            driver = webdriver.Chrome(chrome_options=options, executable_path="DriverConfig\Windows\chromedriver.exe", )
+            driver = webdriver.Chrome(chrome_options=options, executable_path="Environment\Windows\chromedriver.exe", )
         elif(browserType == "Firefox"):
-            driver = webdriver.Firefox(executable_path='DriverConfig\Windows\geckodriver.exe')
+            driver = webdriver.Firefox(executable_path='Environment\Windows\geckodriver.exe')
         elif(browserType == "IE" or browserType == "Interent Explorer"):
-            driver =  webdriver.Ie(executable_path='DriverConfig\Windows\IEDriverServer.exe')
+            driver =  webdriver.Ie(executable_path='Environment\Windows\IEDriverServer.exe')
 
     elif(OsType == 'Linux'):
         print("For "+ OsType +" Operating System , Intializing "+browserType+" browser "+ ".......")    
         if(browserType == "Chrome"):
-            driver = webdriver.Chrome(chrome_options=options, executable_path="DriverConfig\Lnux\chromedriver", )
+            driver = webdriver.Chrome(chrome_options=options, executable_path="Environment/Linux/schromedriver", )
         elif(browserType == "Firefox"):
-            driver = webdriver.Firefox(executable_path='DriverConfig\Linux\geckodriver')
+            driver = webdriver.Firefox(executable_path='Environment\Linux\geckodriver')
         elif(browserType == "IE" or browserType == "Interent Explorer"):
-            driver =  webdriver.Ie(executable_path='DriverConfig\Linux\IEDriverServer')
+            driver =  webdriver.Ie(executable_path='Environment\Linux\IEDriverServer')
         
     elif(OsType == 'Mac'):
         print("For "+ OsType +" Operating System , Intializing "+browserType+" browser "+ ".......")    
         if(browserType == "Chrome"):
-            driver = webdriver.Chrome(chrome_options=options, executable_path="DriverConfig\Mac\chromedriver", )
+            driver = webdriver.Chrome(chrome_options=options, executable_path="Environment/Mac/chromedriver", )
         elif(browserType == "Firefox"):
-            driver = webdriver.Firefox(executable_path='DriverConfig\Mac\geckodriver')
+            driver = webdriver.Firefox(executable_path='Environment\Mac\geckodriver')
         elif(browserType == "IE" or browserType == "Interent Explorer"):
-            driver =  webdriver.Ie(executable_path='DriverConfig\Mac\IEDriverServer')
+            driver =  webdriver.Ie(executable_path='Environment\Mac\IEDriverServer')
     
     return driver

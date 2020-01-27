@@ -3,16 +3,16 @@ perform hover action on 'Add to bag' element
 perform hover action to 123 button at top left 
 hover to 234wedas on the page
 
-hover the mouse click to abc element
-hover the mouse click to 12323f element
-user performs hover the mouse click to abc element
-user performs hover the mouse click to abc element
-user hovers the mouse click to abc element
-user hovers the mouse click to abc123 icon
-user hovers the mouse click to abc321 icon
-user hovers the mouse click to a12 icon
-user perform hover the mouse click to 389ydehushd element
-user perform hover the mouse click to abc element
+hover the mouse  to abc element
+hover the mouse  to 12323f element
+user performs hover the mouse  to abc element
+user performs hover the mouse  to abc element
+user hovers the mouse  to abc element
+user hovers the mouse  to abc123 icon
+user hovers the mouse  to abc321 icon
+user hovers the mouse  to a12 icon
+user perform hover the mouse  to 389ydehushd element
+user perform hover the mouse  to abc element
 
 user moves mouse pointer to abc element
 user performs hover over xyz element

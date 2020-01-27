@@ -67,41 +67,41 @@ for header in headers:
                         if(OS == 'Windows'):
                             print("Environment Set up through Excel File")
                             print("For "+OS+" Operating System , Intializing "+browser+" .......")
-                            driver = webdriver.Chrome(executable_path="DriverConfig\Windows\chromedriver.exe", )
+                            driver = webdriver.Chrome(executable_path="Environment\Windows\chromedriver.exe", )
                         elif(OS == 'Mac'):
                             print("Environment Set up through Excel File")
                             print("Intializing "+browser+" browser for OS "+OS+" through Excel")
-                            driver = webdriver.Chrome(executable_path="DriverConfig\Mac\chromedriver")
+                            driver = webdriver.Chrome(executable_path="Environment/Mac/chromedriver")
                         elif(OS == 'Linux'):
                             print("Environment Set up through Excel File")
                             print("Intializing "+browser+" browser for OS "+OS+" through Excel")
-                            driver = webdriver.Chrome(executable_path="DriverConfig\Linux\chromedriver")
+                            driver = webdriver.Chrome(executable_path="Environment\Linux\chromedriver")
                     if(browser == 'IE'):
                         if(OS == 'Windows'):
                             print("Environment Set up through Excel File")
                             print("Intializing "+browser+" browser for OS "+OS+" through Excel")
-                            driver = webdriver.Ie(executable_path="DriverConfig\Windows\IEDriverServer.exe")
+                            driver = webdriver.Ie(executable_path="Environment\Windows\IEDriverServer.exe")
                         elif(OS == 'Mac'):
                             print("Environment Set up through Excel File")
                             print("Intializing "+browser+" browser for OS "+OS+" through Excel")
-                            driver = webdriver.Ie(executable_path="DriverConfig\Mac\IEDriverServer")
+                            driver = webdriver.Ie(executable_path="Environment/Mac/IEDriverServer")
                         elif(OS == 'Linux'):
                             print("Environment Set up through Excel File")
                             print("Intializing "+browser+" browser for OS "+OS+" through Excel")
-                            driver = webdriver.Ie(executable_path="DriverConfig\Linux\IEDriverServer")
+                            driver = webdriver.Ie(executable_path="Environment\Linux\IEDriverServer")
                     if(browser == 'Firefox'):
                         if(OS == 'Windows'):
                             print("Environment Set up through Excel File")
                             print("Intializing "+browser+" browser for OS "+OS+" through Excel")
-                            driver = webdriver.Ie(executable_path="DriverConfig\Windows\IEDriverServer.exe")
+                            driver = webdriver.Ie(executable_path="Environment\Windows\IEDriverServer.exe")
                         elif(OS == 'Mac'):
                             print("Environment Set up through Excel File")
                             print("Intializing "+browser+" browser for OS "+OS+" through Excel")
-                            driver = webdriver.Ie(executable_path="DriverConfig\Mac\IEDriverServer")
+                            driver = webdriver.Ie(executable_path="Environment/Mac/IEDriverServer")
                         elif(OS == 'Linux'):
                             print("Environment Set up through Excel File")
                             print("Intializing "+browser+" browser for OS "+OS+" through Excel")
-                            driver = webdriver.Ie(executable_path="DriverConfig\Linux\IEDriverServer")
+                            driver = webdriver.Ie(executable_path="Environment\Linux\IEDriverServer")
                 data = pd.read_excel(r"TestCases.xlsx", sheet_name = scenarios[i])
                 writer = pd.ExcelWriter(r"Regression.xlsx", engine='xlsxwriter')
                 data.to_excel(writer, sheet_name= "RunTest")

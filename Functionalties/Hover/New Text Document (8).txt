@@ -1,7 +1,7 @@
-user hover the mouse click to abc element
-user hover the mouse click to abc123 icon
-user hover the mouse click to abc321 icon
-user hover the mouse click to a12 icon
+user hover the mouse to abc element
+user hover the mouse to abc123 icon
+user hover the mouse to abc321 icon
+user hover the mouse to a12 icon
 
 user hover to the abc element
 user hover to the abc123 icon

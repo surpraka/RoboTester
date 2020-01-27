@@ -3,13 +3,34 @@ README v1.0 / January 2020
 # Utility : RoboTester
 
 ## Brief : 
-RoboTester is a Machine learning based Autonomous testing utility which uses Natural Language Processing (NLP) and Supervised Machine Learning (ML) capabilities to do faster and reliable functional automation of both Web portals and Web services. It is script less automation with self learning capability, which enables Unit test cases, Story level and Regression suite automation on the fly. 
-
-Functional validations are performed with minimum human intervention and the more you run the more smarter it becomes using it self-learning capability. It can sit on top of our existing Selenium/Python based Functional automation framework and can be the real AI/ML brain for our Automation.
-
-Major functionalities includes, web sites and API automation, multi-OS and cross browser support, Jenkins integration, HTML test result reporting and self-learning. 
-
+RoboTester is a Machine learning based Autonomous testing utility which uses Natural Language Processing (NLP) and Supervised Machine Learning (ML) capabilities to do
+faster and reliable functional automation of both Web portals and Web services. It is script less automation with self learning capability, which enables Unit test cases,
+Story level and Regression suite automation on the fly. Functional validations are performed with minimum human intervention and the more you run the more smarter it
+becomes using it self-learning capability. It can sit on top of our existing Selenium/Python based Functional automation framework and can be the real AI/ML brain for our
+Automation. Major functionalities includes, web sites and API automation, multi-OS and cross browser support, Jenkins integration, HTML test result reporting and self-learning. 
 RoboTester is a sapient proprietary tool.
+
+##Installation : 
+
+###Requirements : 
+Install java version 8
+Install the latest version of Python as per the OS
+Install the required python libraries - using 'Imports' batch file present inside RoboTester code repository
+Install Spyder (Via Anaconda) to debug python code
+
+###SetUp : 
+Clone project from github repository : https://del.tools.publicis.sapient.com/bitbucket/projects/DAM/repos/robotester/
+Make sure to have all the above requirements
+
+## Components Of Robotester : 
+
+### Type of Web Interactions : It handles Button, TextField, Hover, Dropdown, validations, GET and POST action of service.
+
+### Object Repository :
+RoboTester has the capability to create Object Repository of WebElements with their Xpaths in the form of Key(Element Name) Value(Xpath) pair, which makes it
+a self learning tool. In case, Roboster is unable to find the element by it's own then user has the permission to add particular element's xpath by oneself.
+
+Example : Element1(key);"//*[text()='Element1']"(value)
 
 ##Usage : 
 
@@ -32,9 +53,10 @@ Roboster wants user to prepare some test data before execution i.e.,
 		> 'Browser' column is to set the type of browser i.e., Chrome,IE and Firefox
 		> 'Operating System' column is to set the type of OS i.e., Windows, MAC and Linuxs
 	3. Choose Proper Browser Type :
-		> Open 'DriverConfig' folder in project repository.
-		> Then, Open 'BrowserType' file and mention the Flag as 'Y/N' in the front of browser key.
+		> Open 'Environment' folder in project repository.
+		> Then, Open 'config' file and mention the type of browser and OS.
 
+Important Note : User can set the browser and OS type from both config.txt and driver sheet of excel, though perference is given to excel sheet first
 Finally, run the 'execute' bat(in the project repository) file to initiate the Robotester.
 
 ### Execution on Jenkins : 
@@ -44,18 +66,6 @@ Finally, run the 'execute' bat(in the project repository) file to initiate the R
 	3. Now create a pipeline Job using 'JenkinsFile' present in the project repository. (One time effort)
 	4. Finally, Build the job to execute RoboTester.
 
-
-##Installation : 
-
-###Requirements : 
-Install java version 8
-Install the latest version of Python as per the OS
-Install the required python libraries - using 'Imports' batch file present inside RoboTester code repository
-Install Spyder (Via Anaconda) to debug python code
-
-###SetUp : 
-Clone project from github repository : https://del.tools.publicis.sapient.com/bitbucket/projects/DAM/repos/robotester/
-Make sure to have all the above requirements
 
 ##Credits and Contacts : 
 Varun Sharma (varun.sharma@publicissapient.com)
