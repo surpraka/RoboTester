@@ -27,6 +27,7 @@ import json
 import os.path
 import findElement
 import DriverSetUp
+import Dictionary
 
 def allione(driver):
     # =============================================================================
@@ -97,8 +98,11 @@ def allione(driver):
         def action(self,sentence,driver):
     
             driver.implicitly_wait(1)
-    
             array = sentence.split("'")
+            elementName = array[3]
+            commonFlag = array[2]
+            dropdownOption = array[1]
+            
             flag = 0
     
             temp = ""
@@ -109,9 +113,9 @@ def allione(driver):
             try:
                 if(flag==0):
                     flag =1
-                    temp = "//select[contains(@class,'"+array[3]+"')]"
+                    temp = "//select[contains(@class,'"+elementName+"')]"
                     elem = driver.find_element_by_xpath(temp)
-                    print("this is by @class for "+array[3])
+                    print("this is by @class for "+elementName)
             except NoSuchElementException:
                     flag =0
                     pass
@@ -119,9 +123,9 @@ def allione(driver):
             try:
                 if(flag==0):
                     flag =1
-                    temp = "//select[contains(@id,'"+array[3]+"')]"
+                    temp = "//select[contains(@id,'"+elementName+"')]"
                     elem = driver.find_element_by_xpath(temp)
-                    print("this is by @id for "+array[3])
+                    print("this is by @id for "+elementName)
             except NoSuchElementException:
                     flag =0
                     pass
@@ -129,9 +133,9 @@ def allione(driver):
             try:
                 if(flag==0):
                     flag =1
-                    temp = "//select[@id='"+array[3]+"']"
+                    temp = "//select[@id='"+elementName+"']"
                     elem = driver.find_element_by_xpath(temp)
-                    print("this is by @id for "+array[3])
+                    print("this is by @id for "+elementName)
             except NoSuchElementException:
                     flag =0
                     pass
@@ -139,9 +143,9 @@ def allione(driver):
             try:
                 if(flag==0):
                     flag =1
-                    temp = "//select[@class='"+array[3]+"']"
+                    temp = "//select[@class='"+elementName+"']"
                     elem = driver.find_element_by_xpath(temp)
-                    print("this is by @class for "+array[3])
+                    print("this is by @class for "+elementName)
             except NoSuchElementException:
                     flag =0
                     pass
@@ -149,7 +153,7 @@ def allione(driver):
             try :
                 if(flag==0):
                     flag =1
-                    temp = "//*[@title = '"+array[3]+"']"
+                    temp = "//*[@title = '"+elementName+"']"
                     elem = driver.find_element_by_xpath(temp)
                     print('this is by @title')
             except NoSuchElementException:
@@ -160,99 +164,79 @@ def allione(driver):
             try :
                 if(flag==0):
                     flag =1
-                    temp = "//*[text()  = '"+array[3]+"']"
+                    temp = "//*[text()  = '"+elementName+"']"
                     elem = driver.find_element_by_xpath(temp)
                     print('this is by text')
             except NoSuchElementException:
                     flag=0
                     pass
     
-    #        try:
-    #            if(flag==0):
-    #                flag=1
-    #                temp = "//*[text()='"+ array[1]+"']/.."
-    #                elem = driver.find_element_by_xpath(temp)
-    #                print('this is by super'+array[3]+array[1])
-    #        except NoSuchElementException:
-    #                flag=0
-    #                pass
-    #        
-            dic = {}
+            # Read Xpaths from object dictionary   
             driver.implicitly_wait(1)
-            #name = driver.current_url
             name = driver.title
+            filepath = "ObjectMap/"+name+".txt"  
             name = re.sub(r'\W','',str(name))
-            #name = name[-15:]
-            print(name)
-            filepath = "ObjectMap/"+name+".txt"
-    
-            if(os.path.exists(filepath)):
-                print("file exists")
-                pass
-            else:
-                print("making file")
-                f= open(filepath,"w+")
-                f.close()
-    # =============================================================================
-    # read the elements and xpaths for current page from object map to dictionary
-    # =============================================================================
-            with open(filepath) as csv_file :
-    
-                csv_reader = csv.reader(csv_file,delimiter=';')
-                line_count=0
-                for row in csv_reader:
-                    if line_count==0:
-                        line_count+=1
-                    else:
-                        dic[row[1]] = row[2]
-    
-    #if element not found yet then check in dictionary
+            dic = {}
+            
+            #Common Elements
+            #if element not found yet then check in dictionary
             if(flag==0):
-    
-                if array[3] in dic.keys():
+                dic = Dictionary.readCommonXpathsFromObjectRepo()
+                print("Dictionary "+dic)
+                if elementName in dic.keys():
                    try:
-                        temp = dic[array[3]]
+                        temp = dic[elementName]
                         flag=1
                         elem = driver.find_element_by_xpath(temp)
-                        print('element found in dictionary')
+                        print('Element '+elementName+' found in dictionary')
                    except NoSuchElementException:
                         flag=0
                         pass
-    
-            option = None
-    #perform action
+          
+            #Page Specific Elements              
+            #if element not found yet then check in dictionary
+            if(flag==0):
+                dic = Dictionary.readXpathsFromObjectRepo(name)
+                print("Dictionary "+dic)
+                if elementName in dic.keys():
+                   try:
+                        temp = dic[elementName]
+                        flag=1
+                        elem = driver.find_element_by_xpath(temp)
+                        print('Element '+elementName+' found in dictionary')
+                   except NoSuchElementException:
+                        flag=0
+                        pass
+             
+            print("Storing Element"+ elementName +" Into Dictionary")
+            Dictionary.updateDictionary(flag,elementName,commonFlag,dic,temp,filepath)  
+            
+            #perform action
             if(flag == 1):
                 elem.click()
                 dropdown = Select(elem)
                 try:
-                    option = dropdown.select_by_visible_text(array[1])
+                    option = dropdown.select_by_visible_text(dropdownOption)
                 except NoSuchElementException:
                     option = False
                     pass
             if(option == False):
                 dropdown = Select(elem)
                 try:
-                    option = dropdown.select_by_value(array[1])
+                    option = dropdown.select_by_value(dropdownOption)
                 except NoSuchElementException:
                     option = False
                     pass
             else:
-                print('elements not found')
+                print('Element'+ elementName +' not found')
                 return flag
-    #if new window opens switch windows
+            
+            #if new window opens switch windows
             windowhandle = driver.window_handles
             if(len(windowhandle)>1):
                 switchwindow = driver.window_handles[-1]
                 driver.switch_to_window(switchwindow)
     
-    
-    #if element found and not in dictionary then update dictionary
-            if(flag==1):
-                if not array[3] in dic.keys():
-                    dic[array[3]] = temp
-    # write dictionary to csv file of object map for current page
-            df = pd.DataFrame( [(k,v) for k,v in dic.items()],columns = ['key','value'])
-            df.to_csv(filepath,sep = ';')
             return flag
     
     class Button:
@@ -485,7 +469,7 @@ def allione(driver):
                 if(flag == 0):
                     flag = 1
                     temp = "//input[contains(@name,'"+array[1]+"')]"
-                    elem = driver.find_element_by_link_text(array[3])
+                    elem = driver.find_element_by_link_text(array[1])
                     print('this is by link text')
             except NoSuchElementException :
                 flag =0
@@ -751,12 +735,11 @@ def allione(driver):
     # establish connection to java gateway entry point
     gateway = JavaGateway(gateway_parameters=GatewayParameters())
     if(driver == None):
-        print("Environment Set up through config File")
+        print(" ********************** Environment Set up through config File **********************")
         driver = DriverSetUp.setUpDriver()
     driver.maximize_window()
     
     print(mylist)
-    
     
     sample = mylist
     
@@ -954,7 +937,7 @@ def allione(driver):
                  else:
                     gateway.entry_point.reportFail('Asserted: '+ array[1]+' is not selected')
     
-        
+    print("")
+    print("Program has ended")
     driver.close()
     gateway.entry_point.endAll()
-    print('program has ended')

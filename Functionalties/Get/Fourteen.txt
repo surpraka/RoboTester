@@ -1,0 +1,36 @@
+hit the url "www.google.com"
+user hit url "www.cetera.com"
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+"facebook" is opened by the user
+hit the url "www.google.com"
+user hit url "www.cetera.com"
+hit the url "www.google.com"
+user hit url "www.cetera.com"
+hit the url "www.google.com"
+user hit url "www.cetera.com"
+hit the url "www.google.com"
+user hit url "www.cetera.com"
+hit the url "www.google.com"
+user hit url "www.cetera.com"
+hit the url "www.google.com"
+user hit url "www.cetera.com"
+hit the url "www.google.com"
+user hit url "www.cetera.com"
+hit the url "www.google.com"
+user hit url "www.cetera.com"
+hit the url "www.google.com"
+user hit url "www.cetera.com"

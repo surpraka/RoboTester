@@ -6,7 +6,7 @@
 4;QTY Dropdown;//md-input-container[@class='shoppable-item-qty-selection-continer md-input-has-placeholder md-input-has-value']//md-select[@id='shoppable_magic_select_qty']
 5;18 oz Option;//md-option[@id='select_option_51']
 6;1 size Option;//md-option[@id='select_option_101']
-7;ADD TO BAG;//div[@class='removed-container-false shoppable-item-info-table layout-row']//button[3]
+7;ADD TO BAG ICON;//button[@id='shoppable_magic_v1_cart_tab']
 8;Sub Total;//p[@class='subtotal']//span[@class='value pull-right']
 9;cart;//button[contains(@id,'cart')]
 10;VIEW CART;//button[contains(text(),'VIEW CART')]

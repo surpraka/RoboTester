@@ -1,0 +1,2 @@
+;key;value
+0;js-product-dropdown;//select[contains(@class,'js-product-dropdown')]
