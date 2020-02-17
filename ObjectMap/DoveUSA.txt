@@ -1,4 +1,4 @@
 ;key;value
-0;Search;//a[contains(.,'Search')]
+0;Search;//a[@class='o-navbar-label js-search-btn']
 1;Search Field;//form[@id='globalSearch']//input[@placeholder='Type something here...']
-2;Search Button;//form[@id='globalSearch']//button[@class='hidden-xs o-btn o-btn--ternary js-btn-search'][@title='Search']
+2;Search Button;//form[@id='globalSearch']//button[contains(text(),'Search')]

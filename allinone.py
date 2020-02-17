@@ -9,7 +9,6 @@
 """
 
 import pandas as pd
-import csv
 from py4j.java_gateway import JavaGateway, GatewayParameters
 import re
 from nltk.corpus import stopwords
@@ -24,9 +23,11 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
 import requests
 import json
-import os.path
+
 import findElement
 import DriverSetUp
+import Dictionary
+import SeparateDataAndEntity
 
 def allione(driver):
     # =============================================================================
@@ -86,10 +87,11 @@ def allione(driver):
     
         def browse(self,url,driver):
     
-            array = url.split("'")
-            print("http://"+array[1])
-            driver.get("http://"+array[1])
-    
+            #array = url.split("'")
+            array = re.findall("'(.*?)'",url)
+            print("http://"+array[0])
+            driver.get("http://"+array[0])
+            driver.implicitly_wait(1)
             return 1 
         
     class Dropdown:
@@ -97,8 +99,11 @@ def allione(driver):
         def action(self,sentence,driver):
     
             driver.implicitly_wait(1)
-    
-            array = sentence.split("'")
+            #array = sentence.split("'")
+            array = SeparateDataAndEntity.findOutDataAndEntity(sentence)
+            elementName = array["element"]
+            dropdownOption = array["data"]
+            
             flag = 0
     
             temp = ""
@@ -109,9 +114,9 @@ def allione(driver):
             try:
                 if(flag==0):
                     flag =1
-                    temp = "//select[contains(@class,'"+array[3]+"')]"
+                    temp = "//select[contains(@class,'"+elementName+"')]"
                     elem = driver.find_element_by_xpath(temp)
-                    print("this is by @class for "+array[3])
+                    print("this is by @class for "+elementName)
             except NoSuchElementException:
                     flag =0
                     pass
@@ -119,9 +124,9 @@ def allione(driver):
             try:
                 if(flag==0):
                     flag =1
-                    temp = "//select[contains(@id,'"+array[3]+"')]"
+                    temp = "//select[contains(@id,'"+elementName+"')]"
                     elem = driver.find_element_by_xpath(temp)
-                    print("this is by @id for "+array[3])
+                    print("this is by @id for "+elementName)
             except NoSuchElementException:
                     flag =0
                     pass
@@ -129,9 +134,9 @@ def allione(driver):
             try:
                 if(flag==0):
                     flag =1
-                    temp = "//select[@id='"+array[3]+"']"
+                    temp = "//select[@id='"+elementName+"']"
                     elem = driver.find_element_by_xpath(temp)
-                    print("this is by @id for "+array[3])
+                    print("this is by @id for "+elementName)
             except NoSuchElementException:
                     flag =0
                     pass
@@ -139,9 +144,9 @@ def allione(driver):
             try:
                 if(flag==0):
                     flag =1
-                    temp = "//select[@class='"+array[3]+"']"
+                    temp = "//select[@class='"+elementName+"']"
                     elem = driver.find_element_by_xpath(temp)
-                    print("this is by @class for "+array[3])
+                    print("this is by @class for "+elementName)
             except NoSuchElementException:
                     flag =0
                     pass
@@ -149,7 +154,7 @@ def allione(driver):
             try :
                 if(flag==0):
                     flag =1
-                    temp = "//*[@title = '"+array[3]+"']"
+                    temp = "//*[@title = '"+elementName+"']"
                     elem = driver.find_element_by_xpath(temp)
                     print('this is by @title')
             except NoSuchElementException:
@@ -160,141 +165,127 @@ def allione(driver):
             try :
                 if(flag==0):
                     flag =1
-                    temp = "//*[text()  = '"+array[3]+"']"
+                    temp = "//*[text()  = '"+elementName+"']"
                     elem = driver.find_element_by_xpath(temp)
                     print('this is by text')
             except NoSuchElementException:
                     flag=0
                     pass
     
-    #        try:
-    #            if(flag==0):
-    #                flag=1
-    #                temp = "//*[text()='"+ array[1]+"']/.."
-    #                elem = driver.find_element_by_xpath(temp)
-    #                print('this is by super'+array[3]+array[1])
-    #        except NoSuchElementException:
-    #                flag=0
-    #                pass
-    #        
-            dic = {}
+            # Read Xpaths from object dictionary   
             driver.implicitly_wait(1)
-            #name = driver.current_url
             name = driver.title
             name = re.sub(r'\W','',str(name))
-            #name = name[-15:]
-            print(name)
-            filepath = "ObjectMap/"+name+".txt"
-    
-            if(os.path.exists(filepath)):
-                print("file exists")
-                pass
-            else:
-                print("making file")
-                f= open(filepath,"w+")
-                f.close()
-    # =============================================================================
-    # read the elements and xpaths for current page from object map to dictionary
-    # =============================================================================
-            with open(filepath) as csv_file :
-    
-                csv_reader = csv.reader(csv_file,delimiter=';')
-                line_count=0
-                for row in csv_reader:
-                    if line_count==0:
-                        line_count+=1
-                    else:
-                        dic[row[1]] = row[2]
-    
-    #if element not found yet then check in dictionary
+            filepath = "ObjectMap/"+name+".txt"  
+            commonDic = {}
+            pageDic = {}
+            
+            commonDic = Dictionary.readCommonXpathsFromObjectRepo()
+            pageDic = Dictionary.readXpathsFromObjectRepo(name)
+            
+            #Common Elements
+            #if element not found yet then check in dictionary
             if(flag==0):
-    
-                if array[3] in dic.keys():
-                   try:
-                        temp = dic[array[3]]
-                        flag=1
-                        elem = driver.find_element_by_xpath(temp)
-                        print('element found in dictionary')
-                   except NoSuchElementException:
-                        flag=0
-                        pass
-    
-            option = None
-    #perform action
+                if(len(commonDic) == 0):
+                    print("Common Dictionary Is Empty")
+                else:
+                    if elementName in commonDic.keys():
+                       try:
+                            temp = commonDic[elementName]
+                            flag=1
+                            elem = driver.find_element_by_xpath(temp)
+                            print('Element '+elementName+' found in Common Dictionary')
+                       except NoSuchElementException:
+                            flag=0
+                            pass
+          
+            #Page Specific Elements              
+            #if element not found yet then check in dictionary
+            if(flag==0):
+                if(len(pageDic) == 0):
+                    print(name+' Page Dictionary is Empty')
+                else:
+                    if elementName in pageDic.keys():
+                       try:
+                            temp = pageDic[elementName]
+                            flag=1
+                            elem = driver.find_element_by_xpath(temp)
+                            print('Element '+elementName+' found in Page Specific dictionary')
+                       except NoSuchElementException:
+                            flag=0
+                            pass
+             
+            Dictionary.updateDictionary(flag,elementName,pageDic,temp,filepath)  
+            
+            #perform action
             if(flag == 1):
                 elem.click()
                 dropdown = Select(elem)
                 try:
-                    option = dropdown.select_by_visible_text(array[1])
+                    option = dropdown.select_by_visible_text(dropdownOption)
                 except NoSuchElementException:
                     option = False
                     pass
+            
             if(option == False):
                 dropdown = Select(elem)
                 try:
-                    option = dropdown.select_by_value(array[1])
+                    option = dropdown.select_by_value(dropdownOption)
                 except NoSuchElementException:
                     option = False
                     pass
             else:
-                print('elements not found')
+                print('Element'+ elementName +' not found')
                 return flag
-    #if new window opens switch windows
+            
+            #if new window opens switch windows
             windowhandle = driver.window_handles
             if(len(windowhandle)>1):
                 switchwindow = driver.window_handles[-1]
                 driver.switch_to_window(switchwindow)
     
-    
-    #if element found and not in dictionary then update dictionary
-            if(flag==1):
-                if not array[3] in dic.keys():
-                    dic[array[3]] = temp
-    # write dictionary to csv file of object map for current page
-            df = pd.DataFrame( [(k,v) for k,v in dic.items()],columns = ['key','value'])
-            df.to_csv(filepath,sep = ';')
             return flag
     
     class Button:
     
         def action(self,sentence,driver):
     
-            array = sentence.split("'")
-    
+            #array = sentence.split("'")
+            array = re.findall("'(.*?)'",sentence)
             flag = 0
             driver.implicitly_wait(1)
-    
             temp=""
+            elementName =  array[0]
     # =============================================================================
     # try to find the element using different strategies
     # and status flag keeps track of whether the element has been found
     # =============================================================================
             try :
                 if(flag==0):
-                    temp ="//button[contains(@id,'"+ array[1]+"')]"
+                    temp ="//button[contains(@id,'"+ elementName +"')]"
                     elem = driver.find_element_by_xpath(temp)
                     flag=1
-                    print('this is by //button_@id')
+                    print('Found Xpath by --  //button_@id')
             except NoSuchElementException :
                 flag =0
                 pass
             
             try :
                 if(flag==0):
-                    temp ="//button[@class='"+ array[1]+"']"
+                    temp ="//button[@class='"+ elementName +"']"
                     elem = driver.find_element_by_xpath(temp)
                     flag=1
-                    print('this is by //button_@class')
+                    print('Found Xpath by --  //button_@class')
             except NoSuchElementException :
                 flag =0
                 pass
             
             try :
                 if(flag==0):
-                    temp ="//button[text()='"+ array[1]+"']"
+                    temp ="//button[text()='"+ elementName +"']"
                     elem = driver.find_element_by_xpath(temp)
                     flag=1
-                    print('this is by //button_text()')
+                    print('Found Xpath by --  //button_text()')
     
             except NoSuchElementException :
                 flag =0
@@ -302,9 +293,9 @@ def allione(driver):
     
             try:
                 if(flag==0):
-                   elem = driver.find_element_by_link_text(array[1])
+                   elem = driver.find_element_by_link_text(elementName)
                    flag=1
-                   print('this is by link text()')
+                   print('Found Xpath by --  link text()')
     
             except NoSuchElementException:
     
@@ -313,10 +304,10 @@ def allione(driver):
     
             try :
                 if(flag==0):
-                    temp= "//*[@class='"+array[1]+"']"
+                    temp= "//*[@class='"+elementName+"']"
                     elem = driver.find_element_by_xpath(temp)
                     flag=1
-                    print('this is by @class')
+                    print('Found Xpath by -- @class')
     
             except NoSuchElementException :
                 flag =0
@@ -324,110 +315,105 @@ def allione(driver):
             
             try:
                 if(flag==0):
-                   temp = "//*[contains(@value,'"+array[1]+"')]"
+                   temp = "//*[contains(@value,'"+elementName+"')]"
                    elem = driver.find_element_by_xpath(temp)
                    flag=1
                    print(temp)
-                   print('this is by contains @value')
+                   print('Found Xpath by -- @value')
             except NoSuchElementException:
                 flag=0
                 pass
             
             try :
                 if(flag==0):
-                    temp ="//*[text()='"+ array[1]+"']"
+                    temp ="//*[text()='"+ elementName +"']"
                     elem = driver.find_element_by_xpath(temp)
                     flag=1
-                    print('this is by text')
+                    print('Found Xpath by -- text')
     
             except NoSuchElementException :
                 flag =0
                 pass
     
             validFlag = 0
-    
-            dic = {}
-            #name = driver.current_url
+            
+            
+            # Read Xpaths from object dictionary   
             driver.implicitly_wait(1)
             name = driver.title
             name = re.sub(r'\W','',str(name))
-            #name = name[-15:]
-            print(name)
-            filepath = "ObjectMap/"+name+".txt"
-    
-            if(os.path.exists(filepath)):
-                print("file exists")
-                pass
-            else:
-                print("making file")
-                f= open(filepath,"w+")
-                f.close()
-    
-    # =============================================================================
-    # read the elements and xpaths for current page from object map to dictionary
-    # =============================================================================
-            with open(filepath ) as csv_file :
-    
-                csv_reader = csv.reader(csv_file,delimiter=';')
-                line_count=0
-                for row in csv_reader:
-                    if line_count==0:
-                        line_count+=1
-                    else:
-                        dic[row[1]] = row[2]
-    
-    #if element not found yet then check in dictionary
+            filepath = "ObjectMap/"+name+".txt"  
+            
+            commonDic = {}
+            pageDic = {}
+            commonDic = Dictionary.readCommonXpathsFromObjectRepo()
+            pageDic = Dictionary.readXpathsFromObjectRepo(name)
+            
+            #Common Elements
+            #if element not found yet then check in dictionary
             if(flag==0):
-                if array[1] in dic.keys():
-                   try:
-                        temp = dic[array[1]]
-                        print(temp)
-                        flag=1
-                        elem = driver.find_element_by_xpath(dic[array[1]])
-                        print('element found in dictionary')
-                   except NoSuchElementException:
-                        flag=0
-                        pass
-    
-            driver.implicitly_wait(2)
-    
+                if(len(commonDic) == 0):
+                    print("Common Dictionary Is Empty")
+                else:
+                    if elementName in commonDic.keys():
+                       try:
+                            temp = commonDic[elementName]
+                            flag=1
+                            elem = driver.find_element_by_xpath(temp)
+                            print('Element '+elementName+' found in Common Dictionary')
+                       except NoSuchElementException:
+                            flag=0
+                            pass
+          
+            #Page Specific Elements              
+            #if element not found yet then check in dictionary
+            if(flag==0):
+                if(len(pageDic) == 0):
+                    print(name+' Page Dictionary is Empty')
+                else:
+                    if elementName in pageDic.keys():
+                       try:
+                            temp = pageDic[elementName]
+                            flag=1
+                            elem = driver.find_element_by_xpath(temp)
+                            print('Element '+elementName+' found in Page specific Dictionary')
+                       except NoSuchElementException:
+                            flag=0
+                            pass
+             
+            Dictionary.updateDictionary(flag,elementName,pageDic,temp,filepath)  
+            
+            #driver.implicitly_wait(2)
             if(flag==1):
                  try:
                     if(elem.is_displayed()):
-                        print('pass')
+                        print(elementName+' is displayed')
                         validFlag = 1
                  except:
-                    print('valid flag didnt work')
+                    print(elementName+' element is not Visible in View Port')
+                    print("Solution :  Try using scroll")
                     pass
             else:
-                print('element not found')
-    #perform action
+                print(elementName+ 'element not found')
+            
+            #perform action
             if(flag==1):
                 try:
                     elem.click()
                     print("click")
                 except ElementNotInteractableException:
                     Hover = ActionChains(driver).move_to_element(elem).click().perform()
-    
                     print("NotInteractable Hover")
                 except ElementClickInterceptedException:
                     Hover = ActionChains(driver).move_to_element(elem).click().perform()
                     print("Intercepted hover")
-    #if element found and not in dictionary then update dictionary
-            if(flag==1):
-                if not array[1] in dic.keys():
-                    dic[array[1]] = temp
-    #if new window opens switch windows
+            
+            #if new window opens switch windows
             windowhandle = driver.window_handles
             if(len(windowhandle)>1):
                 switchwindow = driver.window_handles[-1]
                 driver.switch_to_window(switchwindow)
-    # write dictionary to csv file of object map for current page
-            df = pd.DataFrame( [(k,v) for k,v in dic.items()],columns = ['key','value'])
-            df.to_csv(filepath,sep = ';')
-    
-    
-    
+          
             return flag and validFlag
     
     class Hover:
@@ -435,18 +421,21 @@ def allione(driver):
         def action(self,sentence,driver):
             
             driver.implicitly_wait(1)        
-            array = sentence.split("'")
+            #array = sentence.split("'")
+            array = re.findall("'(.*?)'",sentence)
             flag = 0 ;
+            elementName = array[0]
     # =============================================================================
     # try to find the element using different strategies
     # and status flag keeps track of whether the element has been found
     # =============================================================================
+            
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//input[contains(@text,'"+array[1]+"')]"
+                    temp = "//input[contains(@text,'"+ elementName +"')]"
                     elem = driver.find_element_by_xpath(temp)
-                    print('this is by contains @text')
+                    print('this is by contains Input Tag and @text')
             except NoSuchElementException :
                 flag =0
                 pass
@@ -454,7 +443,7 @@ def allione(driver):
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//input[@title = '"+array[1]+"']"
+                    temp = "//input[@title = '"+elementName+"']"
                     elem = driver.find_element_by_xpath(temp)
                     print('this is by //input_title')
             except NoSuchElementException :
@@ -464,7 +453,7 @@ def allione(driver):
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//input[@id = '"+array[1]+"']"
+                    temp = "//input[@id = '"+elementName+"']"
                     elem = driver.find_element_by_xpath(temp)
                     print('this is by //input_@id')
             except NoSuchElementException :
@@ -474,7 +463,7 @@ def allione(driver):
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//input[contains(@name,'"+array[1]+"')]"
+                    temp = "//input[contains(@name,'"+elementName+"')]"
                     elem = driver.find_element_by_xpath(temp)
                     print('this is by contains @name')
             except NoSuchElementException :
@@ -484,8 +473,7 @@ def allione(driver):
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//input[contains(@name,'"+array[1]+"')]"
-                    elem = driver.find_element_by_link_text(array[3])
+                    elem = driver.find_element_by_link_text(elementName)
                     print('this is by link text')
             except NoSuchElementException :
                 flag =0
@@ -494,7 +482,7 @@ def allione(driver):
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//input[contains(@text,'"+array[1]+"')]"
+                    temp = "//input[contains(@text,'"+elementName+"')]"
                     elem = driver.find_element_by_xpath(temp)
                     print('this is by contains @text')
             except NoSuchElementException :
@@ -503,7 +491,7 @@ def allione(driver):
             
             try:
                 if(flag==0):
-                   temp = "//*[contains(@value,'"+array[1]+"')]"
+                   temp = "//*[contains(@value,'"+elementName+"')]"
                    elem = driver.find_element_by_xpath(temp)
                    flag=1
                    print(temp)
@@ -515,7 +503,7 @@ def allione(driver):
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//*[contains(text(),'"+array[1]+"')]//..//input"
+                    temp = "//*[contains(text(),'"+elementName+"')]//..//input"
                     elem = driver.find_element_by_xpath(temp)
                     print('this is by contains placeholder')
             except NoSuchElementException :
@@ -525,77 +513,78 @@ def allione(driver):
     
             validFlag = 0
     
-            dic = {}
-            #name = driver.current_url
+            # Read Xpaths from object dictionary   
             driver.implicitly_wait(1)
             name = driver.title
             name = re.sub(r'\W','',str(name))
-            #name = name[-15:]
-            filepath = "ObjectMap/"+name+".txt"
-    
-            if(os.path.exists(filepath)):
-                print("file exists")
-                pass
-            else:
-                print("making file")
-                f= open(filepath,"w+")
-                f.close()
-                
-    # =============================================================================
-    # read the elements and xpaths for current page from object map to dictionary
-    # =============================================================================
-            with open(filepath ) as csv_file :
-    
-                csv_reader = csv.reader(csv_file,delimiter=';')
-                line_count=0
-                for row in csv_reader:
-                    if line_count==0:
-                        line_count+=1
-                    else:
-                        dic[row[1]] = row[2]
-    
-    #if element not found yet then check in dictionary
+            filepath = "ObjectMap/"+name+".txt"  
+            commonDic = {}
+            pageDic = {}
+            
+            commonDic = Dictionary.readCommonXpathsFromObjectRepo()
+            pageDic = Dictionary.readXpathsFromObjectRepo(name)
+            
+            #Common Elements
+            #if element not found yet then check in dictionary
             if(flag==0):
-                print('searching in dictionary')
-                if array[1] in dic.keys():
-                   try:
-                        temp = dic[array[1]]
-                        flag=1
-                        elem = driver.find_element_by_xpath(temp)
-                        print('element found in dictionary')
-                   except NoSuchElementException:
-                        flag=0
-                        pass
-    #perform action
+                if(len(commonDic) == 0):
+                    print("Common Dictionary Is Empty")
+                else:
+                    if elementName in commonDic.keys():
+                       try:
+                            temp = commonDic[elementName]
+                            flag=1
+                            elem = driver.find_element_by_xpath(temp)
+                            print('Element '+elementName+' found in Common Dictionary')
+                       except NoSuchElementException:
+                            flag=0
+                            pass
+          
+            #Page Specific Elements              
+            #if element not found yet then check in dictionary
+            if(flag==0):
+                if(len(pageDic) == 0):
+                    print(name+' Page Dictionary is Empty')
+                else:
+                    if elementName in pageDic.keys():
+                       try:
+                            temp = pageDic[elementName]
+                            flag=1
+                            elem = driver.find_element_by_xpath(temp)
+                            print('Element '+elementName+' found in page Specific dictionary')
+                       except NoSuchElementException:
+                            flag=0
+                            pass
+             
+            Dictionary.updateDictionary(flag,elementName,pageDic,temp,filepath)  
+            
+            #perform action
             if(flag == 1):
                 hover = ActionChains(driver).move_to_element(elem)
                 hover.perform() 
     
                 try:
                     if(elem.is_displayed()):
-                        print("pass")
+                        print(elementName + " is visible in View Port")
                         validFlag = 1
                 except:
-                    print("fail")
+                     print(elementName + " is visible in View Port")
             else:
-                print('element not found')
-    #if element found and not in dictionary then update dictionary
-            if(flag==1):
-                if not array[1] in dic.keys():
-                    dic[array[1]] = temp
-    # write dictionary to csv file of object map for current page
-            df = pd.DataFrame( [(k,v) for k,v in dic.items()],columns = ['key','value'])
-            df.to_csv(filepath,sep = ';')
+                print(elementName+' Element not found')
+            
             return flag and validFlag
             
     class Textfield:
     
         def action(self,sentence,driver):
     
-            driver.implicitly_wait(2)
-    
-            array = sentence.split("'")
+            driver.implicitly_wait(1)
+            
+            array = SeparateDataAndEntity.findOutDataAndEntity(sentence)
+            elementName = array["element"]
+            text_to_enter = array["data"]
             flag = 0 ;
+    
     # =============================================================================
     # try to find the element using different strategies
     # and status flag keeps track of whether the element has been found
@@ -603,7 +592,7 @@ def allione(driver):
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//input[contains(@text,'"+array[3]+"')]"
+                    temp = "//input[contains(@text,'"+elementName+"')]"
                     inputbox = driver.find_element_by_xpath(temp)
                     print('this is by contains @text')
             except NoSuchElementException :
@@ -613,7 +602,7 @@ def allione(driver):
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//input[@title = '"+array[3]+"']"
+                    temp = "//input[@title = '"+elementName+"']"
                     inputbox = driver.find_element_by_xpath(temp)
                     print('this is by //input_title')
             except NoSuchElementException :
@@ -623,7 +612,7 @@ def allione(driver):
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//input[@id = '"+array[3]+"']"
+                    temp = "//input[@id = '"+elementName+"']"
                     inputbox = driver.find_element_by_xpath(temp)
                     print('this is by //input_@id')
             except NoSuchElementException :
@@ -633,7 +622,7 @@ def allione(driver):
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//input[contains(@name,'"+array[3]+"')]"
+                    temp = "//input[contains(@name,'"+elementName+"')]"
                     inputbox = driver.find_element_by_xpath(temp)
                     print('this is by contains @name')
             except NoSuchElementException :
@@ -643,8 +632,7 @@ def allione(driver):
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//input[contains(@name,'"+array[3]+"')]"
-                    inputbox = driver.find_element_by_link_text(array[3])
+                    inputbox = driver.find_element_by_link_text(elementName)
                     print('this is by link text')
             except NoSuchElementException :
                 flag =0
@@ -653,7 +641,7 @@ def allione(driver):
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//input[contains(@text,'"+array[3]+"')]"
+                    temp = "//input[contains(@text,'"+elementName+"')]"
                     inputbox = driver.find_element_by_xpath(temp)
                     print('this is by contains @text')
             except NoSuchElementException :
@@ -662,7 +650,7 @@ def allione(driver):
             
             try:
                 if(flag==0):
-                   temp = "//*[contains(@value,'"+array[3]+"')]"
+                   temp = "//*[contains(@value,'"+elementName+"')]"
                    inputbox = driver.find_element_by_xpath(temp)
                    flag=1
                    print(temp)
@@ -674,7 +662,7 @@ def allione(driver):
             try :
                 if(flag == 0):
                     flag = 1
-                    temp = "//*[contains(text(),'"+array[3]+"')]//..//input"
+                    temp = "//*[contains(text(),'"+elementName+"')]//..//input"
                     inputbox = driver.find_element_by_xpath(temp)
                     print('this is by contains placeholder')
             except NoSuchElementException :
@@ -684,85 +672,78 @@ def allione(driver):
     
             validFlag = 0
     
-            dic = {}
-            #name = driver.current_url
+            
+            # Read Xpaths from object dictionary   
             driver.implicitly_wait(1)
             name = driver.title
             name = re.sub(r'\W','',str(name))
-            #name = name[-15:]
-            filepath = "ObjectMap/"+name+".txt"
-    
-            if(os.path.exists(filepath)):
-                print("file exists")
-                pass
-            else:
-                print("making file")
-                f= open(filepath,"w+")
-                f.close()
-                
-    # =============================================================================
-    # read the elements and xpaths for current page from object map to dictionary
-    # =============================================================================
-            with open(filepath ) as csv_file :
-    
-                csv_reader = csv.reader(csv_file,delimiter=';')
-                line_count=0
-                for row in csv_reader:
-                    if line_count==0:
-                        line_count+=1
-                    else:
-                        dic[row[1]] = row[2]
-    
-    #if element not found yet then check in dictionary
+            filepath = "ObjectMap/"+name+".txt"  
+            commonDic = {}
+            pageDic = {}
+            
+            commonDic = Dictionary.readCommonXpathsFromObjectRepo()
+            pageDic = Dictionary.readXpathsFromObjectRepo(name)
+            
+            #Common Elements
+            #if element not found yet then check in dictionary
             if(flag==0):
-                print('searching in dictionary')
-                if array[3] in dic.keys():
-                   try:
-                        temp = dic[array[3]]
-                        flag=1
-                        inputbox = driver.find_element_by_xpath(temp)
-                        print('element found in dictionary')
-                   except NoSuchElementException:
-                        flag=0
-                        pass
-    #perform action
+                if(len(commonDic) == 0):
+                    print("Common Dictionary Is Empty")
+                else:
+                    if elementName in commonDic.keys():
+                       try:
+                            temp = commonDic[elementName]
+                            flag=1
+                            inputbox = driver.find_element_by_xpath(temp)
+                            print('Element '+elementName+' found in Common Dictionary')
+                       except NoSuchElementException:
+                            flag=0
+                            pass
+          
+            #Page Specific Elements              
+            #if element not found yet then check in dictionary
+            if(flag==0):
+                if(len(pageDic) == 0):
+                    print(name+' Page Dictionary is Empty')
+                else:
+                    if elementName in pageDic.keys():
+                       try:
+                            temp = pageDic[elementName]
+                            flag=1
+                            inputbox = driver.find_element_by_xpath(temp)
+                            print('Element '+elementName+' found in Page Specific dictionary')
+                       except NoSuchElementException:
+                            flag=0
+                            pass
+             
+            Dictionary.updateDictionary(flag,elementName,pageDic,temp,filepath)  
+            
+            #perform action
             if(flag == 1):
                 inputbox.clear()
-                inputbox.send_keys(array[1])
+                inputbox.send_keys(text_to_enter)
     
                 try:
                     if(inputbox.is_displayed()):
-                        print("pass")
+                        print(elementName+" is displayed in View Port")
                         validFlag = 1
                 except:
-                    print("fail")
+                    print(elementName+" is not displayed in View Port")
             else:
-                print('element not found')
-    #if element found and not in dictionary then update dictionary
-            if(flag==1):
-                if not array[3] in dic.keys():
-                    dic[array[3]] = temp
-    # write dictionary to csv file of object map for current page
-            df = pd.DataFrame( [(k,v) for k,v in dic.items()],columns = ['key','value'])
-            df.to_csv(filepath,sep = ';')
+                print(elementName+ ' Element not found')
+   
             return flag and validFlag
     
     
     # establish connection to java gateway entry point
     gateway = JavaGateway(gateway_parameters=GatewayParameters())
     if(driver == None):
-        print("Environment Set up through config File")
+        print(" ********************** Environment Set up through config File **********************")
         driver = DriverSetUp.setUpDriver()
     driver.maximize_window()
-    
-    print(mylist)
-    
-    
     sample = mylist
     
     for sen in sample:
-    
-    
     # =============================================================================
     #     vectorize the testcase and then predict class using classifier
     # =============================================================================
@@ -771,7 +752,7 @@ def allione(driver):
         print(classifier.predict(testcase))
     
         if(classifier.predict(testcase) ==0):
-            print("button")
+            print('Action is classified as Button')
             button = Button()
             # pass the action to button class 
             status_flag  = button.action(str(sen),driver)
@@ -783,7 +764,7 @@ def allione(driver):
     
     
         if(classifier.predict(testcase) ==6):
-            print("dropdown")
+            print('Action is classified as DropDown')
             dropdown = Dropdown()
             # pass the action to dropdown class 
             status_flag = dropdown.action(str(sen),driver)
@@ -795,7 +776,7 @@ def allione(driver):
     
         if(classifier.predict(testcase) ==1):
             gateway.entry_point.reportScenario('***** Running TestCase :'+scnames.pop(0)+' *****')
-            print("get")
+            print('Action is classified as  Hit URL')
             get = Get()
              # pass the action to get class 
             status_flag = get.browse(str(sen),driver)
@@ -807,7 +788,7 @@ def allione(driver):
     
         if(classifier.predict(testcase) ==7):
     
-            print("textfield")
+            print('Action is classified as TextField')
             textfield = Textfield()
              # pass the action to textfield class 
             status_flag = textfield.action(str(sen),driver)
@@ -819,7 +800,7 @@ def allione(driver):
     
         if(classifier.predict(testcase) == 4):
             gateway.entry_point.reportPass('***** Running WebService Test*****')
-            print('getservice')
+            print('Action is classified as Get Service')
             array = sen.split("'")
     
             URL = array[1]
@@ -852,7 +833,7 @@ def allione(driver):
     
         if(classifier.predict(testcase) == 3):
             gateway.entry_point.reportPass('***** Running WebService Test*****')
-            print('post service')
+            print('Action is classified as Post Service')
             array = sen.split("'")
     
             URL = array[1]
@@ -877,7 +858,7 @@ def allione(driver):
                 gateway.entry_point.reportFail('response not matching')
                 
         if(classifier.predict(testcase) == 2):
-            print("Hover")
+            print('Action is classified as Hover')
             hover = Hover()
              # pass the action to textfield class 
             status_flag = hover.action(str(sen),driver)
@@ -888,17 +869,9 @@ def allione(driver):
                 break
             
         if(classifier.predict(testcase) == 5):
-            print('validation')
+            print('Action is classified as Validation')
             array = sen.split("'")
             
-            if('equal to' in sen):
-                Element = findElement.FindElement()
-                elem = Element.action(str(sen),driver)
-                text = elem.text
-                if(text == array[3]):
-                    gateway.entry_point.reportPass("Asserted : "+sen)
-                else:
-                    gateway.entry_point.reportFail("Asserted :"+sen)
             if("www" in array[1] or "WWW" in array[1]):
                 ##### Page URL Validation  #######
                 url = array[1]
@@ -953,8 +926,15 @@ def allione(driver):
                      gateway.entry_point.reportPass('Asserted: '+ array[1]+' is selected')
                  else:
                     gateway.entry_point.reportFail('Asserted: '+ array[1]+' is not selected')
+            elif('equal to' in sen or 'equals to' in sen or 'equals' in sen or 'equal' in sen):
+                Element = findElement.FindElement()
+                elem = Element.action(str(sen),driver)
+                text = elem.text
+                if(text == array[3]):
+                    gateway.entry_point.reportPass("Asserted : "+sen)
+                else:
+                    gateway.entry_point.reportFail("Asserted :"+sen)
     
         
     driver.close()
     gateway.entry_point.endAll()
-    print('program has ended')

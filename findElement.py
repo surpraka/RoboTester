@@ -190,7 +190,7 @@ class FindElement:
                     pass
         print(elem)
         
-        wait = WebDriverWait(driver, 10)
-        wait.until(ec.visibility_of(elem))
+        wait = WebDriverWait(driver, 2)
+        #wait.until(ec.visibility_of(elem))
 
         return elem

@@ -1,0 +1,7 @@
+;key;value
+0;js-product-dropdown;//select[contains(@class,'js-product-dropdown')]
+1;Sub Total;//p[@class='subtotal']//span[@class='value pull-right']
+2;password;//input[@id = 'password']
+3;Testing;test
+4;abc;xpath1
+5;testing1;testXpath1

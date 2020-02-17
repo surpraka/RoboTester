@@ -1,5 +1,5 @@
 ;key;value
 0;I Agree;//*[text()='I Agree']
-1;password;//input[@id = 'password']
-2;userName;//input[@id = 'userName']
-3;Complete;//*[contains(@value,'Complete')]
+1;userName;//input[@id = 'userName']
+2;Complete;//*[contains(@value,'Complete')]
+3;password;//input[@id = 'password']

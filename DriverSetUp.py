@@ -29,7 +29,6 @@ def setUpDriver():
         print("For "+ OsType +" Operating System , Intializing "+browserType+" browser "+ ".......")    
         if(browserType == "Chrome"):
             options = Options()
-            options.binary_location = "C:/Users/surpraka/AppData/Local/Google/Chrome/Application/chrome.exe"
             driver = webdriver.Chrome(chrome_options=options, executable_path="Environment\Windows\chromedriver.exe", )
         elif(browserType == "Firefox"):
             driver = webdriver.Firefox(executable_path='Environment\Windows\geckodriver.exe')
