@@ -21,6 +21,9 @@ from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.common.by import By
 import requests
 import json
 
@@ -87,11 +90,16 @@ def allione(driver):
     
         def browse(self,url,driver):
     
-            #array = url.split("'")
             array = re.findall("'(.*?)'",url)
-            print("http://"+array[0])
-            driver.get("http://"+array[0])
-            driver.implicitly_wait(1)
+            
+            if("http" not in array[0]):
+                print("http://"+array[0])
+                driver.get("http://"+array[0])
+            else:
+                print(array[0])
+                driver.get(array[0])
+            
+            driver.implicitly_wait(4)
             return 1 
         
     class Dropdown:
@@ -99,10 +107,11 @@ def allione(driver):
         def action(self,sentence,driver):
     
             driver.implicitly_wait(1)
-            #array = sentence.split("'")
             array = SeparateDataAndEntity.findOutDataAndEntity(sentence)
             elementName = array["element"]
+            print("Element : "+elementName)
             dropdownOption = array["data"]
+            print("DropwDown option : "+dropdownOption)
             
             flag = 0
     
@@ -219,6 +228,7 @@ def allione(driver):
             
             #perform action
             if(flag == 1):
+                #WebDriverWait(driver, 10).until(ec.visibility_of_element_located(By.XPATH,temp))
                 elem.click()
                 dropdown = Select(elem)
                 try:
@@ -399,13 +409,15 @@ def allione(driver):
             #perform action
             if(flag==1):
                 try:
+                    driver.implicitly_wait(1)
+                    #driver.execute_script("arguments[0].click();", elem)
                     elem.click()
-                    print("click")
+                    print("clicked")
                 except ElementNotInteractableException:
-                    Hover = ActionChains(driver).move_to_element(elem).click().perform()
+                    ActionChains(driver).move_to_element(elem).click().perform()
                     print("NotInteractable Hover")
                 except ElementClickInterceptedException:
-                    Hover = ActionChains(driver).move_to_element(elem).click().perform()
+                    ActionChains(driver).move_to_element(elem).click().perform()
                     print("Intercepted hover")
             
             #if new window opens switch windows
@@ -560,6 +572,7 @@ def allione(driver):
             
             #perform action
             if(flag == 1):
+                #WebDriverWait(driver, 10).until(ec.visibility_of_element_located(By.XPATH,temp))
                 hover = ActionChains(driver).move_to_element(elem)
                 hover.perform() 
     
@@ -582,7 +595,10 @@ def allione(driver):
             
             array = SeparateDataAndEntity.findOutDataAndEntity(sentence)
             elementName = array["element"]
+            print("Element : "+elementName)
             text_to_enter = array["data"]
+            print("Text_to_enter : "+text_to_enter)
+            
             flag = 0 ;
     
     # =============================================================================
@@ -720,6 +736,7 @@ def allione(driver):
             
             #perform action
             if(flag == 1):
+                #WebDriverWait(driver, 10).until(ec.visibility_of_element_located(By.XPATH,temp))
                 inputbox.clear()
                 inputbox.send_keys(text_to_enter)
     

@@ -8,3 +8,4 @@ pip install selenium
 pip install py4j
 pip install xlsxwriter
 python -m nltk.downloader stopwords
+python -m nltk.downloader wordnet

@@ -29,7 +29,7 @@ def checkFirstSentenceContainstVerb(phrases):
 
     return tmp    
 
-def checkPOStag(sentence):
+def checkPOStag(sentence,info):
     phrases = sentence.split("'")
     
     pos = []
@@ -37,23 +37,24 @@ def checkPOStag(sentence):
     data = None
     
     for i in range(0,len(phrases)):
-        wordset = phrases[i].strip().split(" ")
-        for w in wordset:
-            words.append(w)
-            try:
-                pos.append(wn.synsets(w)[0].pos())
-            except IndexError:
-                pos.append("-")
-                pass
-        
-        if('v' in pos):
-            if(pos.count("v") > 1):
-                data = phrases[i-1]
-            elif(pos.count("v") == 1):
-                data = phrases[i+1]
-        
-        words.clear()
-        pos.clear()
+        if(phrases[i] not in info):
+            wordset = phrases[i].strip().split(" ")
+            for w in wordset:
+                words.append(w)
+                try:
+                    pos.append(wn.synsets(w)[0].pos())
+                except IndexError:
+                    pos.append("-")
+                    pass
+            
+            if('v' in pos):
+                if(pos.count("v") > 1):
+                    data = phrases[i-1]
+                elif(pos.count("v") == 1):
+                    data = phrases[i+1]
+            
+            words.clear()
+            pos.clear()
     
     if(data == None):
         data = "Empty"
@@ -89,7 +90,7 @@ def findOutDataAndEntity(sentence):
     
     if(Data == None or Element == None):
         print("checkPOStag ..........................")
-        Data = checkPOStag(sentence)
+        Data = checkPOStag(sentence,info)
         
         if(Data != "Empty"):
             if(Data == info[0]):
@@ -106,3 +107,4 @@ def findOutDataAndEntity(sentence):
     print("*************************************** Separated Data and Entity **********************************")
     
     return final
+    
