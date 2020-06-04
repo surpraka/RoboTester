@@ -1,3 +1,4 @@
 ;key;value
 0;Register;//*[text()='Register']
 1;MFS Logo;//div[@class='mfs-home-logo']//a[@class='js-mfs-logo']
+2;js-product-dropdown;//select[contains(@class,'js-product-dropdown')]

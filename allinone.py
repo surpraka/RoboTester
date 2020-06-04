@@ -9,7 +9,6 @@
 """
 
 import pandas as pd
-from py4j.java_gateway import JavaGateway, GatewayParameters
 import re
 from nltk.corpus import stopwords
 from sklearn.datasets import load_files
@@ -26,17 +25,20 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 import requests
 import json
-
 import findElement
 import DriverSetUp
 import Dictionary
 import SeparateDataAndEntity
+import html_logger
+import sys
 
-def allione(driver):
+def allione(driver,regressionFile,htmlReportName,sheetName):
+    
+    logger = html_logger.init_logger("Regression",sheetName,htmlReportName)
     # =============================================================================
     # Read the testcases from excel sheet and load them into a list of strings
     # =============================================================================
-    df = pd.read_excel(r"Regression.xlsx", sheet_name= "RunTest") # can index sheet by name 
+    df = pd.read_excel(regressionFile, sheet_name= sheetName) # can index sheet by name 
     mylist = df['Actions'].tolist()
     
     # =============================================================================
@@ -99,7 +101,7 @@ def allione(driver):
                 print(array[0])
                 driver.get(array[0])
             
-            driver.implicitly_wait(4)
+            
             return 1 
         
     class Dropdown:
@@ -228,24 +230,37 @@ def allione(driver):
             
             #perform action
             if(flag == 1):
-                #WebDriverWait(driver, 10).until(ec.visibility_of_element_located(By.XPATH,temp))
-                elem.click()
-                dropdown = Select(elem)
                 try:
-                    option = dropdown.select_by_visible_text(dropdownOption)
+                    elem.click()
+                    dropdown = Select(elem)
+                    try:
+                        option = dropdown.select_by_visible_text(dropdownOption)
+                    except NoSuchElementException:
+                        logger.error(elementName +' Element thrown error : '+str(sys.exc_info()[0]))
+                        option = False
+                        pass
+                    except  ElementClickInterceptedException:
+                        logger.error(elementName+' Element thrown error : '+str(sys.exc_info()[0]))
+                        logger.info("Please use scroll to make element visible in viewport")
+                except ElementClickInterceptedException:
+                    logger.error(elementName+' Element thrown error : '+str(sys.exc_info()[0]))
                 except NoSuchElementException:
-                    option = False
-                    pass
-            
+                    logger.error(elementName+' Element thrown error : '+str(sys.exc_info()[0]))
+                    logger.info("Please use scroll to make element visible in viewport")
+                    driver.close()
+                    
+                
             if(option == False):
                 dropdown = Select(elem)
                 try:
                     option = dropdown.select_by_value(dropdownOption)
                 except NoSuchElementException:
+                    logger.error(elem+' Element thrown error : '+str(sys.exc_info()[0]))
                     option = False
                     pass
             else:
                 print('Element'+ elementName +' not found')
+                logger.error('Element'+ elementName +' not found')
                 return flag
             
             #if new window opens switch windows
@@ -400,11 +415,13 @@ def allione(driver):
                         print(elementName+' is displayed')
                         validFlag = 1
                  except:
-                    print(elementName+' element is not Visible in View Port')
-                    print("Solution :  Try using scroll")
+                    logger.error(elementName+' element is not Visible in View Port')
+                    logger.info("Solution :  Try using scroll")
                     pass
             else:
                 print(elementName+ 'element not found')
+                logger.error(elementName+" element not found")
+           
             
             #perform action
             if(flag==1):
@@ -416,9 +433,11 @@ def allione(driver):
                 except ElementNotInteractableException:
                     ActionChains(driver).move_to_element(elem).click().perform()
                     print("NotInteractable Hover")
+                    logger.error(elementName+" element is not interactable with error : "+ str(sys.exc_info()[0]))
                 except ElementClickInterceptedException:
                     ActionChains(driver).move_to_element(elem).click().perform()
                     print("Intercepted hover")
+                    logger.error(elementName+" element is not clickable with error : "+ str(sys.exc_info()[0]))
             
             #if new window opens switch windows
             windowhandle = driver.window_handles
@@ -581,9 +600,12 @@ def allione(driver):
                         print(elementName + " is visible in View Port")
                         validFlag = 1
                 except:
-                     print(elementName + " is visible in View Port")
+                     print(elementName + " is not visible in View Port")
+                     logger.error(elementName+ " is not visible in view Port")
             else:
                 print(elementName+' Element not found')
+                logger.error(elementName+" element not found")
+           
             
             return flag and validFlag
             
@@ -746,14 +768,17 @@ def allione(driver):
                         validFlag = 1
                 except:
                     print(elementName+" is not displayed in View Port")
+                    logger.error(elementName+" element is not displayed in view Port")
+
             else:
                 print(elementName+ ' Element not found')
+                logger.error(elementName+" element not found")
+           
    
             return flag and validFlag
     
     
-    # establish connection to java gateway entry point
-    gateway = JavaGateway(gateway_parameters=GatewayParameters())
+    
     if(driver == None):
         print(" ********************** Environment Set up through config File **********************")
         driver = DriverSetUp.setUpDriver()
@@ -774,9 +799,9 @@ def allione(driver):
             # pass the action to button class 
             status_flag  = button.action(str(sen),driver)
             if(status_flag == 1 ):
-                gateway.entry_point.reportPass('testcase :'+sen+' is successful')
+                logger.debug('testcase :'+sen+' is successful')
             else:
-                gateway.entry_point.reportFail('testcase :'+sen+' is fail')
+                logger.error('testcase :'+sen+' is fail')
                 break
     
     
@@ -786,23 +811,23 @@ def allione(driver):
             # pass the action to dropdown class 
             status_flag = dropdown.action(str(sen),driver)
             if(status_flag == 1 ):
-                gateway.entry_point.reportPass('testcase :'+sen+' is successful')
+                logger.debug('testcase :'+sen+' is successful')
             else:
-                gateway.entry_point.reportFail('testcase :'+sen+' is fail')
+                logger.error('testcase :'+sen+' is fail')
                 break
     
         if(classifier.predict(testcase) ==1):
-            gateway.entry_point.reportScenario('***** Running TestCase :'+scnames.pop(0)+' *****')
+            logger.info('***** Running TestCase :'+scnames.pop(0)+' *****')
             print('Action is classified as  Hit URL')
             get = Get()
              # pass the action to get class 
             status_flag = get.browse(str(sen),driver)
             if(status_flag == 1 ):
-                gateway.entry_point.reportPass('testcase :'+sen+' is successful')
+                logger.debug('testcase :'+sen+' is successful')
             else:
-                gateway.entry_point.reportFail('testcase :'+sen+' is fail')
+                logger.error('testcase :'+sen+' is fail')
                 break
-    
+        
         if(classifier.predict(testcase) ==7):
     
             print('Action is classified as TextField')
@@ -810,13 +835,13 @@ def allione(driver):
              # pass the action to textfield class 
             status_flag = textfield.action(str(sen),driver)
             if(status_flag == 1 ):
-                gateway.entry_point.reportPass('testcase :'+sen+' is successful')
+                logger.debug('testcase :'+sen+' is successful')
             else:
-                gateway.entry_point.reportFail('testcase :'+sen+' is fail')
+                logger.error('testcase :'+sen+' is fail')
                 break
     
         if(classifier.predict(testcase) == 4):
-            gateway.entry_point.reportPass('***** Running WebService Test*****')
+            logger.info('***** Running WebService Test*****')
             print('Action is classified as Get Service')
             array = sen.split("'")
     
@@ -833,23 +858,23 @@ def allione(driver):
                 print(r.status_code)
     
                 if(r.status_code == 200):
-                    gateway.entry_point.reportPass('status code is : 200 OK')
+                    logger.debug('status code is : 200 OK')
                     if('verify response' in sen or 'Verify response' in sen or 'validate response' in sen):
                         givenValue = array[5]
                         print(givenValue)
                         if(str(data)==givenValue):
-                            gateway.entry_point.reportPass('service verified')
+                            logger.debug('service verified')
                         else:
-                            gateway.entry_point.reportFail('response not matching')
+                            logger.error('response not matching')
                 else:
-                    gateway.entry_point.reportFail('status code is : '+r.status_code)
+                    logger.error('status code is : '+r.status_code)
             except Exception as e:
                 print(" An Exception Occured for "+ URL+" as "+str(e))
-                gateway.entry_point.reportFail('status code is : '+r.status_code)
+                logger.error('status code is : '+r.status_code)
     
     
         if(classifier.predict(testcase) == 3):
-            gateway.entry_point.reportPass('***** Running WebService Test*****')
+            logger.info('***** Running WebService Test*****')
             print('Action is classified as Post Service')
             array = sen.split("'")
     
@@ -864,15 +889,15 @@ def allione(driver):
     
     
             if(r.status_code == 200):
-                gateway.entry_point.reportPass('status code is : 200 OK')
+                logger.debug('status code is : 200 OK')
             else:
-                gateway.entry_point.reportFail('status code is : '+r.status_code)
+                logger.error('status code is : '+r.status_code)
     
             givenValue = array[5]
             if(str(data)==givenValue):
-                gateway.entry_point.reportPass('service verified')
+                logger.debug('service verified')
             else:
-                gateway.entry_point.reportFail('response not matching')
+                logger.error('response not matching')
                 
         if(classifier.predict(testcase) == 2):
             print('Action is classified as Hover')
@@ -880,9 +905,9 @@ def allione(driver):
              # pass the action to textfield class 
             status_flag = hover.action(str(sen),driver)
             if(status_flag == 1 ):
-                gateway.entry_point.reportPass('testcase :'+sen+' is successful')
+                logger.debug('testcase :'+sen+' is successful')
             else:
-                gateway.entry_point.reportFail('testcase :'+sen+' is fail')
+                logger.error('testcase :'+sen+' is fail')
                 break
             
         if(classifier.predict(testcase) == 5):
@@ -893,65 +918,64 @@ def allione(driver):
                 ##### Page URL Validation  #######
                 url = array[1]
                 if(driver.current_url == url):
-                    gateway.entry_point.reportPass('Asserted : Page URL is correct as Actual : '+url+' And Expected : '+driver.current_url)
+                    logger.debug('Asserted : Page URL is correct as Actual : '+url+' And Expected : '+driver.current_url)
                 else:
-                    gateway.entry_point.reportFail('Asserted : Page URL is not correct as Actual : '+url+' And Expected : '+driver.current_url)
+                    logger.error('Asserted : Page URL is not correct as Actual : '+url+' And Expected : '+driver.current_url)
             elif("Page title" in sen or "page title" in sen or "Page Title" in sen):
                 ##### Page Title Validation  #######
                 title = array[1]
                 if(driver.title == title):
-                    gateway.entry_point.reportPass('Asserted : Page title is correct as Actual : '+title+' And Expected : '+driver.title)
+                    logger.debug('Asserted : Page title is correct as Actual : '+title+' And Expected : '+driver.title)
                 else:
-                    gateway.entry_point.reportFail('Asserted : Page title is not correct as Actual : '+title+' And Expected : '+driver.title)
+                    logger.error('Asserted : Page title is not correct as Actual : '+title+' And Expected : '+driver.title)
             elif('not displayed' in sen or 'not Displayed' in sen or 'not present' in sen or 'Not Present' in sen or 'not Present' in sen ):
                  ##### Element Displayed Validation  #######
                  Element = findElement.FindElement()
                  elem = Element.action(str(sen),driver)
                  if not elem.is_displayed():
-                     gateway.entry_point.reportPass('Asserted: '+sen)
+                    logger.debug('Asserted: '+sen)
                  else:
-                    gateway.entry_point.reportFail('Asserted: '+sen)
+                    logger.error('Asserted: '+sen)
             elif('displayed' in sen or 'Displayed' in sen or 'present' in sen or 'Present' in sen):
                  ##### Element Displayed Validation  #######
                  Element = findElement.FindElement()
                  elem = Element.action(str(sen),driver)
                  if(elem.is_displayed()):
-                     gateway.entry_point.reportPass('Asserted: '+ sen)
+                    logger.debug('Asserted: '+ sen)
                  else:
-                    gateway.entry_point.reportFail('Asserted: '+ sen)
+                    logger.error('Asserted: '+ sen)
             elif('enabled' in sen or 'enable' in sen):
                  ##### Element Enabled Validation  #######
                  Element = findElement.FindElement()
                  elem = Element.action(str(sen),driver)
                  if(elem.is_enabled()):
-                     gateway.entry_point.reportPass('Asserted: '+ array[1]+' is Enabled')
+                    logger.debug('Asserted: '+ array[1]+' is Enabled')
                  else:
-                    gateway.entry_point.reportFail('Asserted: '+ array[1]+' is not Enabled')
+                    logger.error('Asserted: '+ array[1]+' is not Enabled')
             elif('not selected' in sen or 'unselected' in sen):
                  ##### Element Not Selected Validation  #######
                  Element = findElement.FindElement()
                  elem = Element.action(str(sen),driver)
                  if not elem.is_selected():
-                     gateway.entry_point.reportPass('Asserted: '+ array[1]+' is not selected')
+                    logger.debug('Asserted: '+ array[1]+' is not selected')
                  else:
-                    gateway.entry_point.reportFail('Asserted: '+ array[1]+' is selected but not expected')
+                    logger.error('Asserted: '+ array[1]+' is selected but not expected')
             elif('selected' in sen):
                  ##### Element Selected Validation  #######
                  Element = findElement.FindElement()
                  elem = Element.action(str(sen),driver)
                  if(elem.is_selected()):
-                     gateway.entry_point.reportPass('Asserted: '+ array[1]+' is selected')
+                    logger.debug('Asserted: '+ array[1]+' is selected')
                  else:
-                    gateway.entry_point.reportFail('Asserted: '+ array[1]+' is not selected')
+                    logger.error('Asserted: '+ array[1]+' is not selected')
             elif('equal to' in sen or 'equals to' in sen or 'equals' in sen or 'equal' in sen):
                 Element = findElement.FindElement()
                 elem = Element.action(str(sen),driver)
                 text = elem.text
                 if(text == array[3]):
-                    gateway.entry_point.reportPass("Asserted : "+sen)
+                    logger.debug("Asserted : "+sen)
                 else:
-                    gateway.entry_point.reportFail("Asserted :"+sen)
+                    logger.error("Asserted :"+sen)
     
         
     driver.close()
-    gateway.entry_point.endAll()

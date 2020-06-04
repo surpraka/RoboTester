@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue May 12 16:21:17 2020
+
+@author: surpraka
+"""
+
 """
 /**********************************************************************
 * RoboTester Version 1.0
@@ -10,13 +17,15 @@
 
 import pandas as pd
 import xlrd
-from pathlib import Path
 from selenium import webdriver
 import allinone
 import MoveToCommonRepo
+import time
+import datetime
+import twoThreads
+import threeThread
 
 driver = None
-home = str(Path.home())
 df = pd.read_excel(r"TestCases.xlsx", sheet_name= "Driver")
 wb = xlrd.open_workbook(r"TestCases.xlsx") 
 sheet = wb.sheet_by_name("Driver")
@@ -24,27 +33,11 @@ headers = sheet.row_values(0)
 wb.release_resources()
 del wb
 
+regressionFile = "Regression/Regression.xlsx"
+regressionFile1 = "Regression/Regression1.xlsx"
+
 for header in headers:
-    if('EndToEndExecutionFlag[Y]' in header):
-        print('************************* Starting End To End Execution *************************')
-        scenarios = df['Scenario'].tolist()
-        regressionFlags =  df['EndToEndExecutionFlag[Y]'].tolist()
-
-        df = []
-        for i in range(0,len(regressionFlags)):
-            if(regressionFlags[i] == ('Y')):
-                data = pd.read_excel(r"TestCases.xlsx", sheet_name = scenarios[i])
-                df.append(data)
-
-        df = pd.concat(df)
-        print(df)
-
-        writer = pd.ExcelWriter(r"Regression.xlsx", engine='xlsxwriter')
-        df.to_excel(writer, sheet_name= "RunTest")
-        writer.save()   
-        allinone.allione(driver)
-        writer.close()
-    elif('RegressionExecutionFlag[Y]' in header):
+    if('RegressionExecutionFlag[Y]' in header):
         print('*************************************  Starting Individual Execution *********************************')
         scenarios = df['Scenario'].tolist()
         regressionFlags =  df['RegressionExecutionFlag[Y]'].tolist()
@@ -55,96 +48,127 @@ for header in headers:
         for i in range(0,len(regressionFlags)):
             if(regressionFlags[i] == ('Y')):
                 testCases = testCases +1;
-        
+            
         print("****************************** Total Number Of Test Cases to execute :"+str(testCases)+" ******************************")
         print(" ")
         
         testCasesCount = 1
-        for i in range(0,len(regressionFlags)):
-            if(regressionFlags[i] == ('Y')):
-                browser = BrowserOptions[i]
-                OS = OSoptions[i]
-                
-                print (" ")
-                print("*********************************************************************")
-                print("**************************** TestCase["+str(testCasesCount)+"] ****************************")
-                print("*********************************************************************")
-                print (" ")
-                
-                if(browser == 'Chrome' or browser == 'Firefox' or browser == 'IE'):
-                    if(browser == 'Chrome'):
-                        if(OS == 'Windows'):
-                            print (" ")
-                            print("*****************  Environment Set up through Excel File *****************")
-                            print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
-                            print (" ")
-                            driver = webdriver.Chrome(executable_path="Environment\Windows\chromedriver.exe", )
-                        elif(OS == 'Mac'):
-                            print (" ")
-                            print("*****************  Environment Set up through Excel File *****************")
-                            print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
-                            print (" ")
-                            driver = webdriver.Chrome(executable_path="Environment/Mac/chromedriver")
-                        elif(OS == 'Linux'):
-                            print (" ")
-                            print("*****************  Environment Set up through Excel File *****************")
-                            print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
-                            print (" ")
-                            driver = webdriver.Chrome(executable_path="Environment\Linux\chromedriver")
-                    if(browser == 'IE'):
-                        if(OS == 'Windows'):
-                            print (" ")
-                            print("*****************  Environment Set up through Excel File *****************")
-                            print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
-                            print (" ")
-                            driver = webdriver.Ie(executable_path="Environment\Windows\IEDriverServer.exe")
-                        elif(OS == 'Mac'):
-                            print (" ")
-                            print("*****************  Environment Set up through Excel File *****************")
-                            print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
-                            print (" ")
-                            driver = webdriver.Ie(executable_path="Environment/Mac/IEDriverServer")
-                        elif(OS == 'Linux'):
-                            print (" ")
-                            print("*****************  Environment Set up through Excel File *****************")
-                            print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
-                            print (" ")
-                            driver = webdriver.Ie(executable_path="Environment\Linux\IEDriverServer")
-                    if(browser == 'Firefox'):
-                        if(OS == 'Windows'):
-                            print (" ")
-                            print("*****************  Environment Set up through Excel File *****************")
-                            print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
-                            print (" ")
-                            driver = webdriver.Ie(executable_path="Environment\Windows\geckodriver.exe")
-                        elif(OS == 'Mac'):
-                            print (" ")
-                            print("*****************  Environment Set up through Excel File *****************")
-                            print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
-                            print (" ")
-                            driver = webdriver.Ie(executable_path="Environment/Mac/geckodriver")
-                        elif(OS == 'Linux'):
-                            print (" ")
-                            print("*****************  Environment Set up through Excel File *****************")
-                            print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
-                            print (" ")
-                            driver = webdriver.Ie(executable_path="Environment\Linux\geckodriver")
-                data = pd.read_excel(r"TestCases.xlsx", sheet_name = scenarios[i])
-                writer = pd.ExcelWriter(r"Regression.xlsx", engine='xlsxwriter')
-                data.to_excel(writer, sheet_name= "RunTest")
-                writer.save()   
-                allinone.allione(driver)
-                writer.close()
-                
-                print("")
-                print("************************ Moving Duplicate Elements to Common Repo *************************")
-                MoveToCommonRepo.fetchCommonXpathsFromObjectRepo()
-                print("************************ Moved Duplicate Elements to Common Repo  *************************")
-                print("")
-                
-                print (" ")
-                print("*********************************************************************")
-                print("************************** TestCase["+ str(testCasesCount)+"] has ended **************************")
-                print("*********************************************************************")
-                print (" ")
-                testCasesCount = testCasesCount+1
+        
+        threadCount = df['ThreadCount'].tolist()[0];
+        print("Thread Count is : " + str(threadCount))
+        sheetNames = []
+        
+        ts = time.time()
+        st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        reportName = 'extent_report/HtmlReport'+str(st).replace(":", "").replace("-", "").replace(" ", "")
+                    
+        # Parallel Execution
+        if(threadCount > 1):
+
+            for i in range(0,len(regressionFlags)):
+                if(regressionFlags[i] == ('Y')):
+                    sheetNames.append(scenarios[i])
+            
+            size = len(sheetNames)
+            count = 0
+            
+            print("Number of scenarios : "+str(size)+" and are :")
+            print(sheetNames)
+            
+            if(threadCount==2):
+                twoThreads.twoThreads(threadCount, sheetNames, reportName)
+            if(threadCount == 3):
+                threeThread.threeThreads(threadCount, sheetNames, reportName)
+        #Serial Execution
+        else:
+            print("Serial Execution : ")
+            for i in range(0,len(regressionFlags)):
+                if(regressionFlags[i] == ('Y')):
+                    browser = BrowserOptions[i]
+                    OS = OSoptions[i]
+                    
+                    print (" ")
+                    print("*********************************************************************")
+                    print("**************************** TestCase["+str(testCasesCount)+"] ****************************")
+                    print("*********************************************************************")
+                    print (" ")
+                    
+                    if(browser == 'Chrome' or browser == 'Firefox' or browser == 'IE'):
+                        if(browser == 'Chrome'):
+                            if(OS == 'Windows'):
+                                print (" ")
+                                print("*****************  Environment Set up through Excel File *****************")
+                                print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
+                                print (" ")
+                                driver = webdriver.Chrome(executable_path="Environment\Windows\chromedriver.exe", )
+                            elif(OS == 'Mac'):
+                                print (" ")
+                                print("*****************  Environment Set up through Excel File *****************")
+                                print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
+                                print (" ")
+                                driver = webdriver.Chrome(executable_path="Environment/Mac/chromedriver")
+                            elif(OS == 'Linux'):
+                                print (" ")
+                                print("*****************  Environment Set up through Excel File *****************")
+                                print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
+                                print (" ")
+                                driver = webdriver.Chrome(executable_path="Environment\Linux\chromedriver")
+                        if(browser == 'IE'):
+                            if(OS == 'Windows'):
+                                print (" ")
+                                print("*****************  Environment Set up through Excel File *****************")
+                                print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
+                                print (" ")
+                                driver = webdriver.Ie(executable_path="Environment\Windows\IEDriverServer.exe")
+                            elif(OS == 'Mac'):
+                                print (" ")
+                                print("*****************  Environment Set up through Excel File *****************")
+                                print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
+                                print (" ")
+                                driver = webdriver.Ie(executable_path="Environment/Mac/IEDriverServer")
+                            elif(OS == 'Linux'):
+                                print (" ")
+                                print("*****************  Environment Set up through Excel File *****************")
+                                print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
+                                print (" ")
+                                driver = webdriver.Ie(executable_path="Environment\Linux\IEDriverServer")
+                        if(browser == 'Firefox'):
+                            if(OS == 'Windows'):
+                                print (" ")
+                                print("*****************  Environment Set up through Excel File *****************")
+                                print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
+                                print (" ")
+                                driver = webdriver.Ie(executable_path="Environment\Windows\geckodriver.exe")
+                            elif(OS == 'Mac'):
+                                print (" ")
+                                print("*****************  Environment Set up through Excel File *****************")
+                                print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
+                                print (" ")
+                                driver = webdriver.Ie(executable_path="Environment/Mac/geckodriver")
+                            elif(OS == 'Linux'):
+                                print (" ")
+                                print("*****************  Environment Set up through Excel File *****************")
+                                print("******** For "+OS+" Operating System , Intializing "+browser+" ***********")
+                                print (" ")
+                                driver = webdriver.Ie(executable_path="Environment\Linux\geckodriver")
+                    data = pd.read_excel(r"TestCases.xlsx", sheet_name = scenarios[i])
+                    writer = pd.ExcelWriter(regressionFile, engine='xlsxwriter')
+                    data.to_excel(writer, sheet_name= scenarios[i])
+                    writer.save()   
+                    allinone.allione(driver,regressionFile,reportName+'-'+scenarios[i]+'.html',scenarios[i])
+                    writer.close()
+                    
+                    print("")
+                    print("************************ Moving Duplicate Elements to Common Repo *************************")
+                    MoveToCommonRepo.fetchCommonXpathsFromObjectRepo()
+                    print("************************ Moved Duplicate Elements to Common Repo  *************************")
+                    print("")
+                    
+                    print (" ")
+                    print("*********************************************************************")
+                    print("************************** TestCase["+ str(testCasesCount)+"] has ended **************************")
+                    print("*********************************************************************")
+                    print (" ")
+                    testCasesCount = testCasesCount+1
+                    
+print("Regression has ended")

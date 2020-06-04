@@ -1,3 +1,4 @@
 ;key;value
 0;username;//input[@id = 'username']
 1;Login to MFS.com;//button[text()='Login to MFS.com']
+2;password;//input[@id = 'password']

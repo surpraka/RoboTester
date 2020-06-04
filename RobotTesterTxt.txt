@@ -1,0 +1,32 @@
+
+								  RoboTester Agenda
+----------------------------------------------------------------------------------------------------------------------------
+1. Xpaths
+	a. find element with tags - prepare list of HTML Tags
+	b. existing way
+	c. upper/lower case conversion
+	d. when it finds more than one element : Give message that 'Multi Elements Found : Enter custom Xpath into Object Repo'
+
+2. Parallel Testing
+	a. Intergration is done using multi Thread
+	b. Try using python testing framework
+
+3. Reporting Tool
+	
+4. Visual Testing
+
+
+click on 'mfs' logo
+
+//a - 100 elements
+ 1 -> 5 prop -> mfs
+
+list of tags :
+//a
+//select
+//ng-select
+//div
+
+
+'hair'
+
