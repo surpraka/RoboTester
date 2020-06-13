@@ -9,3 +9,5 @@ python -m pip install py4j
 python -m pip install xlsxwriter
 python -m nltk.downloader stopwords
 python -m nltk.downloader wordnet
+python -m pip install pytest-xdist
+python -m pip install pytest

@@ -17,6 +17,23 @@ import os.path
 
 class FindElement:
     
+    
+    def actionInput(self,sentence,driver):
+        
+        driver.implicitly_wait(2)
+        array = sentence.split("'")
+        flag = 0 ;
+        
+        elements = []
+        elements = driver.find_elements_by_xpath("//input")
+        
+    
+    def actionLink(self,sentence,driver):
+        driver.implicitly_wait(2)
+        array = sentence.split("'")
+        flag = 0 ;
+    
+    
     def action(self,sentence,driver):
         
         driver.implicitly_wait(2)
@@ -190,7 +207,7 @@ class FindElement:
                     pass
         print(elem)
         
-        wait = WebDriverWait(driver, 2)
+        WebDriverWait(driver, 2)
         #wait.until(ec.visibility_of(elem))
 
         return elem

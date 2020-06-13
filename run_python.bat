@@ -1,2 +1,0 @@
-python RegressionSuite.py
-pause

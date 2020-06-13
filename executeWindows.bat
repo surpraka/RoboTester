@@ -1,2 +1,2 @@
-call run_python.bat
+python RoboTesterDriver.py
 pause

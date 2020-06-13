@@ -8,7 +8,6 @@
 ************************************************************************/
 """
 
-import pandas as pd
 import re
 from nltk.corpus import stopwords
 from sklearn.datasets import load_files
@@ -20,9 +19,6 @@ from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.common.by import By
 import requests
 import json
 import findElement
@@ -32,19 +28,18 @@ import SeparateDataAndEntity
 import html_logger
 import sys
 
-def allione(driver,regressionFile,htmlReportName,sheetName):
+def allione(driver,data,htmlReportName,sheetName):
     
     logger = html_logger.init_logger("Regression",sheetName,htmlReportName)
     # =============================================================================
     # Read the testcases from excel sheet and load them into a list of strings
     # =============================================================================
-    df = pd.read_excel(regressionFile, sheet_name= sheetName) # can index sheet by name 
-    mylist = df['Actions'].tolist()
+    mylist = data['Actions'].tolist()
     
     # =============================================================================
     # Read the scenario names as well for extent report beautification
     # =============================================================================
-    sc = df['Scenario'].to_list()
+    sc = data['Scenario'].to_list()
     scnames = [ a for a in sc if isinstance(a,str) ]
     print(scnames)
     

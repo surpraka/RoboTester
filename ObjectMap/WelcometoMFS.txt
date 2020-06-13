@@ -1,0 +1,5 @@
+;key;value
+0;Login;//*[text()='Login']
+1;Investment Professional;//*[text()='Investment Professional']
+2;GO;//button[text()='GO']
+3;Save my selection;//*[text()='Save my selection']
